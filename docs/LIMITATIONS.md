@@ -58,8 +58,11 @@ We rejected NLLB-200 and MMS for being non-commercial, so this needs explaining.
 ### It is the wrong variety of Swahili
 
 The voice is Congolese Swahili (`sw_CD`), not the coastal standard taught in Kenya and
-Tanzania. We asked the Swahili speaker who translated and checked our answers whether
-that would sound off to a Kenyan or Tanzanian ear. Their answer, in full:
+Tanzania. Our Swahili answers came with a judgement on whether that would sound off to
+a Kenyan or Tanzanian ear. Neither the answers nor this judgement came from a Swahili
+speaker (see "Our Swahili is machine-translated" below). An earlier version of this
+document attributed it to "the Swahili speaker who translated and checked our answers".
+That was wrong. Quoted here as an unverified opinion:
 
 > Probably yes. Congolese Swahili differs from the coastal standard in accent and
 > intonation, and in some vocabulary. It is also less strict about noun-class
@@ -70,10 +73,26 @@ that would sound off to a Kenyan or Tanzanian ear. Their answer, in full:
 > the voice. The reliable check is to play these ten lines to one Kenyan and one
 > Tanzanian listener and ask what felt off.
 
-That is their judgement from general knowledge of the dialects. Neither they nor we
-have played the voice to Kenyan or Tanzanian listeners. Until someone does, we do not
-know how it sounds to them. TODO(measure): play the ten verified answers to Kenyan and
-Tanzanian listeners and record what felt off.
+By its own account it rests on general knowledge of the dialects, not on hearing the
+voice, and it is not a Swahili speaker's view. Nobody has played the voice to Kenyan
+or Tanzanian listeners. Until someone does, we do not know how it sounds to them.
+TODO(measure): play the Swahili answers to Kenyan and Tanzanian listeners and record
+what felt off.
+
+## Our Swahili is machine-translated and nobody checked it
+
+Every Swahili sentence in this repo, the answers in `config/guest_bank.yaml` and the
+stop phrases in `config/stop_phrases.yaml`, was produced by machine translation and was
+not reviewed by a Swahili speaker. Earlier versions of this repo said they had been
+checked by one. That was wrong, and we have corrected it.
+
+They are marked `verified: false`. The tool refuses to speak unverified text. Running
+with `--allow-unverified` speaks it anyway and logs a warning for every unverified line,
+so the Swahili stays runnable as a documented hard case, not a verified one.
+
+We could not tell the difference from the text alone. The system enforces the
+distinction in code, but code cannot tell you whether a human actually read
+something: the `verified` flag is only as true as the person who set it.
 
 ## The English voice
 

@@ -74,7 +74,10 @@ class Decision:
     stop_phrase_key: Optional[str]  # "no_match" or "commitment.<reason>"
 
 
-def decide(ranking: list, threshold: float, trigger_hits=(), weak_floor=None) -> Decision:
+def decide(ranking: list, threshold: float, trigger_hits=(), weak_floor=None,
+           allow_unverified=False) -> Decision:
+    """allow_unverified (off by default) lets a written but unverified answer reach BANK;
+    the Speaker must be built with the same setting to speak it."""
     top = ranking[0] if ranking else None
     strong = top if top is not None and top.score >= threshold else None
 
@@ -104,8 +107,9 @@ def decide(ranking: list, threshold: float, trigger_hits=(), weak_floor=None) ->
             else f"commitment flag not set to false ({entry.commitment_flag!r})"
         return Decision(COMMITMENT, f"{flag}; reason {why}", top, entry.intent,
                         f"commitment.{why}")
-    if not entry.answerable:
+    if not (entry.answerable or (allow_unverified and entry.has_answers)):
         return Decision(NO_MATCH, "matched entry has no verified answer (verified: false)",
                         top, entry.intent, "no_match")
     return Decision(BANK, f"score {top.score:.3f} >= threshold {threshold}, not a commitment, "
-                    "no trigger words", top, entry.intent, None)
+                    "no trigger words" + ("" if entry.verified else "; UNVERIFIED answer"),
+                    top, entry.intent, None)

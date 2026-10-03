@@ -167,7 +167,7 @@ entries:
       - "which type of coffee plant is it"
     answer_en: "It's arabica. The old variety my father planted, and some newer trees on the upper rows."
     answer_sw: "Ni arabika. Aina ya zamani aliyopanda baba yangu, na miti mingine mipya kwenye safu za juu."
-    verified: true          # checked by a Swahili speaker, 3 Oct
+    verified: false         # Swahili machine-translated; not reviewed by a Swahili speaker
 
   - id: altitude
     intent: general
@@ -179,7 +179,7 @@ entries:
       - "does the height change the coffee"
     answer_en: "About 1,700 metres here. The coffee likes it — up this high the cherries ripen slowly and the taste is better for it."
     answer_sw: "Hapa ni kama mita elfu moja mia saba. Kahawa inapenda hivyo. Juu hivi, matunda ya kahawa huiva polepole na ladha huwa nzuri zaidi."
-    verified: true          # checked by a Swahili speaker, 3 Oct
+    verified: false         # Swahili machine-translated; not reviewed by a Swahili speaker
 
   - id: harvest_time
     intent: general
@@ -253,7 +253,7 @@ entries:
       - "do you ferment it"
     answer_en: "We pulp the cherries the same day they're picked, then ferment them overnight, wash them, and dry them on the beds over there."
     answer_sw: "Tunaimenya siku ileile tunapoichuma. Kisha inachachuka usiku mzima, tunaiosha, na kuikausha kwenye vitanda vile pale."
-    verified: true          # checked by a Swahili speaker, 3 Oct
+    verified: false         # Swahili machine-translated; not reviewed by a Swahili speaker
 
   - id: drying
     intent: general
@@ -377,7 +377,7 @@ entries:
       - "is all of this yours"
     answer_en: "Two hectares. Coffee on the slope above us, and the maize and beans below."
     answer_sw: "Hekta mbili. Kahawa iko kwenye mteremko juu yetu, na mahindi na maharagwe yako chini."
-    verified: true          # checked by a Swahili speaker, 3 Oct
+    verified: false         # Swahili machine-translated; not reviewed by a Swahili speaker
 
   - id: other_crops
     intent: general
@@ -389,7 +389,7 @@ entries:
       - "what are those other plants"
     answer_en: "Maize and beans on the lower part, below the coffee. That's what we eat. The coffee is what we sell."
     answer_sw: "Mahindi na maharagwe yako chini, chini ya kahawa. Hayo ndiyo tunayokula. Kahawa ndiyo tunayouza."
-    verified: true          # checked by a Swahili speaker, 3 Oct
+    verified: false         # Swahili machine-translated; not reviewed by a Swahili speaker
 
   - id: animals
     intent: general
@@ -463,7 +463,7 @@ entries:
       - "was this your parents' land"
     answer_en: "All my life. This was my parents' land before it was mine."
     answer_sw: "Maisha yangu yote. Hili lilikuwa shamba la wazazi wangu kabla ya kuwa langu."
-    verified: true          # checked by a Swahili speaker, 3 Oct
+    verified: false         # Swahili machine-translated; not reviewed by a Swahili speaker
 
   - id: cooperative
     intent: general
@@ -475,7 +475,7 @@ entries:
       - "how long have you been a member"
     answer_en: "Yes, the Ondera Coffee Cooperative. Eleven years now. They collect the parchment from us after harvest."
     answer_sw: "Ndiyo, Chama cha Ushirika cha Kahawa cha Ondera. Miaka kumi na mmoja sasa. Wanachukua kahawa ya maganda kutoka kwetu baada ya mavuno."
-    verified: true          # checked by a Swahili speaker, 3 Oct
+    verified: false         # Swahili machine-translated; not reviewed by a Swahili speaker
 
   - id: where_coffee_goes
     intent: general
@@ -537,7 +537,7 @@ entries:
       - "is the road passable"
     answer_en: "By the big tree at the bottom, where the track widens. The road above that gets bad after rain."
     answer_sw: "Pale chini kwenye mti mkubwa, njia inapopanuka. Juu ya hapo barabara huharibika baada ya mvua."
-    verified: true          # checked by a Swahili speaker, 3 Oct
+    verified: false         # Swahili machine-translated; not reviewed by a Swahili speaker
 
   - id: walking_difficulty
     intent: logistics
@@ -573,7 +573,7 @@ entries:
       - "is there somewhere to wash my hands"
     answer_en: "Yes, behind the house. There's water by the door to wash your hands."
     answer_sw: "Ndiyo, choo kiko nyuma ya nyumba. Kuna maji mlangoni, unawe mikono."
-    verified: true          # checked by a Swahili speaker, 3 Oct
+    verified: false         # Swahili machine-translated; not reviewed by a Swahili speaker
 
   - id: shelter_or_seating
     intent: logistics
@@ -661,7 +661,7 @@ entries:
       - "do you mind the camera"
     answer_en: "Take as many as you like. Ask me first if you want a photo of me."
     answer_sw: "Piga picha nyingi unavyotaka. Ukitaka kunipiga picha mimi, niulize kwanza."
-    verified: true          # checked by a Swahili speaker, 3 Oct
+    verified: false         # Swahili machine-translated; not reviewed by a Swahili speaker
 
   - id: social_media
     intent: general

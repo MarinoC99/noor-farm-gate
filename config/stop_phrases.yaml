@@ -1,7 +1,9 @@
 # stop_phrases.yaml
 #
 # What the tool says to NOOR when it will not answer. The guest hears nothing.
-# All Swahili checked by a Swahili speaker, 3 October.
+# The Swahili here is machine-translated and was not reviewed by a Swahili speaker,
+# so every phrase is verified: false. An earlier version of this file said it had
+# been checked by a Swahili speaker; that was not true.
 #
 # Routing:
 #   no_match  — nothing matched, or the matched entry has no written answer
@@ -16,24 +18,24 @@ phrases:
   no_match:
     en: "I don't know this one."
     sw: "Sijui hili."
-    verified: true
+    verified: false
 
   money:
     en: "This one is about money — you answer it."
     sw: "Hili ni kuhusu pesa. Jibu wewe mwenyewe."
-    verified: true
+    verified: false
 
   date:
     en: "This one is about a date — you answer it."
     sw: "Hili ni kuhusu tarehe. Jibu wewe mwenyewe."
-    verified: true
+    verified: false
 
   safety:
     en: "This one is about safety — you answer it."
     sw: "Hili ni kuhusu usalama. Jibu wewe mwenyewe."
-    verified: true
+    verified: false
 
   default:
     en: "I don't know this one."
     sw: "Sijui hili."
-    verified: true
+    verified: false

@@ -13,9 +13,13 @@ Each utterance names where its text came from. The allowed sources are fixed:
 
 Bank and stop sources must be a Line whose source is `verified: true`. Anything else
 raises Rule2Violation: that is a bug in routing, never something to recover from.
+The one exception is a Speaker built with allow_unverified=True (the terminal app's
+--allow-unverified flag, off by default): it speaks unverified lines and logs a warning
+naming each line's origin, never its text. scripts/check_rule2.py never sets it.
 Machine-made text can only ever reach the Swahili voice, so it can never be spoken to
 the guest. Text that is missing or still TODO is refused, not spoken.
 """
+import logging
 from dataclasses import dataclass
 from typing import Optional
 
@@ -28,6 +32,7 @@ SOURCES = {
     "guest_question_sw": "sw",
 }
 HUMAN_SOURCES = {"bank_answer_sw", "bank_answer_en", "stop_phrase"}
+log = logging.getLogger(__name__)
 
 
 class Rule2Violation(RuntimeError):
@@ -42,12 +47,14 @@ class Spoken:
     spoken: bool
     seconds: float = 0.0
     refused: Optional[str] = None
+    unverified: bool = False      # spoken under allow_unverified
 
 
 class Speaker:
-    def __init__(self, voices: dict, play: bool = True):
+    def __init__(self, voices: dict, play: bool = True, allow_unverified: bool = False):
         self.voices = voices  # {"sw": Voice, "en": Voice}
         self.play = play
+        self.allow_unverified = allow_unverified
 
     def say(self, source: str, line) -> Spoken:
         if source not in SOURCES:
@@ -58,7 +65,7 @@ class Speaker:
                 return Spoken(source, voice_key, None, spoken=False, refused="no such phrase")
             if not isinstance(line, Line):
                 raise Rule2Violation(f"{source} needs a Line from a bank file, got {type(line).__name__}")
-            if not line.verified:
+            if not line.verified and not self.allow_unverified:
                 raise Rule2Violation(f"refusing to speak {line.origin}: its source is verified: false")
             text = line.text
         else:
@@ -66,6 +73,9 @@ class Speaker:
         if not is_written(text):
             return Spoken(source, voice_key, text, spoken=False,
                           refused="not written by a human yet (TODO or missing)")
+        unverified = source in HUMAN_SOURCES and not line.verified
+        if unverified:
+            log.warning("speaking UNVERIFIED %s (--allow-unverified)", line.origin)
         voice = self.voices[voice_key]
         audio = voice.synthesize(text)
         seconds = len(audio) / voice.sample_rate
@@ -74,4 +84,4 @@ class Speaker:
             sd.play(audio, voice.sample_rate)
             sd.wait()
         return Spoken(source, voice_key, text, spoken=self.play, seconds=seconds,
-                      refused=None if self.play else "muted (--mute)")
+                      refused=None if self.play else "muted (--mute)", unverified=unverified)

@@ -51,10 +51,11 @@ def screen(side, lines):
 
 
 def report_speech(result):
+    flag = ", UNVERIFIED" if result.unverified else ""
     if result.spoken:
-        print(f"  [spoken, {result.voice} voice, {result.seconds:.1f}s] {result.text}")
+        print(f"  [spoken{flag}, {result.voice} voice, {result.seconds:.1f}s] {result.text}")
     elif result.refused and result.refused.startswith("muted"):
-        print(f"  [synthesized, not played: {result.refused}; {result.voice} voice, "
+        print(f"  [synthesized{flag}, not played: {result.refused}; {result.voice} voice, "
               f"{result.seconds:.1f}s] {result.text}")
     else:
         print(f"  [NOT SPOKEN: {result.refused}] source={result.source} text={result.text!r}")
@@ -84,6 +85,9 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--wav", type=Path, help="audio file to use instead of the microphone")
     parser.add_argument("--mute", action="store_true", help="synthesize speech but do not play it")
+    parser.add_argument("--allow-unverified", action="store_true",
+                        help="speak bank and stop text not marked verified: true, logging a "
+                             "warning for each line (off by default; CLAUDE.md rule 2)")
     parser.add_argument("--trace-out", type=Path,
                         help="write the intermediate values to this JSON file (needs --wav)")
     parser.add_argument("--note", default="", help="with --trace-out: what the test audio contains")
@@ -115,6 +119,14 @@ def main():
           f"{sum(e.answerable for e in entries)} answerable (verified and commitment: false)")
     print(f"  stop phrases: " + ", ".join(
         f"{k}{'' if l.verified and l.text else ' (UNVERIFIED or TODO)'}" for k, l in stops.lines.items()))
+    unverified_stops = [k for k, line in stops.lines.items() if not line.verified]
+    if unverified_stops and not args.allow_unverified:
+        print(f"\n  REFUSING TO START: stop phrases not verified: {', '.join(unverified_stops)}.")
+        print("  The tool would have to speak them. Run with --allow-unverified to hear")
+        print("  unverified text anyway; every unverified line spoken logs a warning.")
+        return 2
+    if args.allow_unverified:
+        print("  --allow-unverified: ON. Unverified lines will be spoken, each with a warning.")
     print(f"  match threshold: {threshold} (placeholder, see config/matching.yaml)")
     print(f"  weak match floor: {floor if floor is not None else 'not set: WEAK_MATCH is never recorded'}")
     print("  commitment triggers: " + ", ".join(f"{h} {len(t)}" for h, t in triggers.groups))
@@ -137,7 +149,7 @@ def main():
                     MODELS / "piper/en_US-ljspeech-medium/en_US-ljspeech-medium.onnx"),
     }
     matcher = timed("index bank", Matcher, embedder, entries)
-    speaker = Speaker(voices, play=not args.mute)
+    speaker = Speaker(voices, play=not args.mute, allow_unverified=args.allow_unverified)
     print("  " + ", ".join(f"{k} {v:.2f}s" for k, v in timings.items()))
     timings.clear()
     visit_id = new_visit_id()
@@ -148,7 +160,7 @@ def main():
         result = timed(source, speaker.say, source, line)
         report_speech(result)
         trace["spoken"].append({"source": result.source, "voice": result.voice,
-                                "text": result.text, "spoken": result.spoken,
+                                "text": result.text, "spoken": result.spoken, "unverified": result.unverified,
                                 "refused": result.refused})
 
     # 1. Guest speaks. Audio stays in memory and is dropped straight after transcription.
@@ -194,7 +206,7 @@ def main():
     section("6. commitment trigger words (config/commitment_triggers.yaml)")
     print("  " + (", ".join(f"{term!r} ({heading})" for heading, term in hits) if hits else "none"))
 
-    decision = decide(ranking, threshold, hits, floor)
+    decision = decide(ranking, threshold, hits, floor, allow_unverified=args.allow_unverified)
     trace.update(
         top3=[{"entry_id": m.entry.id, "score": round(m.score, 4), "closest_paraphrase": m.paraphrase,
                "commitment": m.entry.is_commitment, "verified": m.entry.verified}

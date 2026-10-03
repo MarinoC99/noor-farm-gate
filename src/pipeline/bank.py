@@ -41,9 +41,14 @@ class Entry:
         return self.commitment_flag is not False
 
     @property
-    def answerable(self) -> bool:
-        return (not self.is_commitment and self.verified
+    def has_answers(self) -> bool:
+        """Not a commitment and both answers written. Says nothing about verification."""
+        return (not self.is_commitment
                 and self.answer_en.text is not None and self.answer_sw.text is not None)
+
+    @property
+    def answerable(self) -> bool:
+        return self.has_answers and self.verified
 
 
 def _line(value, verified, origin) -> Line:
