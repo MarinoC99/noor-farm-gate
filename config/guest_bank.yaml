@@ -11,6 +11,12 @@
 #              Reviewed answers: one Mexican and one Bolivian speaker, 3 October. The team
 #              made three spelling/tense edits afterwards (cooperative, what_to_wear,
 #              climate_change).
+#
+# English provenance: the original ten English answers, and the eleven marked
+# "en from guest_bank_hr.yaml", were written and reviewed by the team. The eleven
+# were reviewed in guest_bank_hr.yaml and copied here on 3 October; the Spanish
+# reviewers translated against that English. cooperative's English was changed
+# from "parchment" to "beans" to match the reviewed Spanish.
 # answer_sw  — Swahili, kept as the documented hard case. Machine-translated; nobody
 #              who speaks Swahili has reviewed it.
 #
@@ -466,10 +472,10 @@ entries:
       - "is this organic"
       - "do you spray the plants"
       - "what fertiliser do you use"
-    answer_en: TODO(human)
+    answer_en: "Very little. Compost from the pulp, and we only spray if the borer comes."
     answer_sw: TODO(human)
     answer_es: "No mucho. Composta de la pulpa, y sólo ponemos cuando hay barrenadores."
-    verified: {en: false, sw: false, es: true}
+    verified: {en: true, sw: false, es: true}   # en from guest_bank_hr.yaml, see header
 
   - id: water_source
     intent: general
@@ -479,10 +485,10 @@ entries:
       - "do you irrigate"
       - "is there a river nearby"
       - "what happens in a dry year"
-    answer_en: TODO(human)
+    answer_en: "A spring above the top row. In a dry year we carry it."
     answer_sw: TODO(human)
     answer_es: "De un manantial. Cargamos el agua cuando hay sequías."
-    verified: {en: false, sw: false, es: true}
+    verified: {en: true, sw: false, es: true}   # en from guest_bank_hr.yaml, see header
 
   - id: climate_change
     intent: general
@@ -492,10 +498,10 @@ entries:
       - "is climate change affecting you"
       - "are the rains different now"
       - "is it getting harder to grow"
-    answer_en: TODO(human)
+    answer_en: "The rains come later than they did. That's the thing that has changed."
     answer_sw: TODO(human)
     answer_es: "Las lluvias llegan más tarde. Eso es lo que cambió."
-    verified: {en: false, sw: false, es: true}
+    verified: {en: true, sw: false, es: true}   # en from guest_bank_hr.yaml, see header
 
   # ---------- NOOR AND THE COOPERATIVE ----------
 
@@ -520,7 +526,7 @@ entries:
       - "do you sell on your own"
       - "what does the cooperative do"
       - "how long have you been a member"
-    answer_en: "Yes, the Ondera Coffee Cooperative. Eleven years now. They collect the parchment from us after harvest."
+    answer_en: "Yes, the Ondera Coffee Cooperative. Eleven years now. They collect the beans from us after harvest."
     answer_sw: "Ndiyo, Chama cha Ushirika cha Kahawa cha Ondera. Miaka kumi na mmoja sasa. Wanachukua kahawa ya maganda kutoka kwetu baada ya mavuno."
     answer_es: "Sí, estoy con la Cooperativa Cafetera de Ondera desde hace once años. Ellos recolectan los granos después de cada cosecha."
     verified: {en: true, sw: false, es: true}
@@ -533,10 +539,10 @@ entries:
       - "which countries buy it"
       - "could I find this at home"
       - "who do you sell to"
-    answer_en: TODO(human)
+    answer_en: "Through the cooperative to the auction. After that I don't know where it goes."
     answer_sw: TODO(human)
     answer_es: "La cooperativa lo lleva a subasta. No sé nada después de eso."
-    verified: {en: false, sw: false, es: true}
+    verified: {en: true, sw: false, es: true}   # en from guest_bank_hr.yaml, see header
 
   - id: family
     intent: general
@@ -546,10 +552,10 @@ entries:
       - "do your children help"
       - "who else lives on the farm"
       - "will your children farm too"
-    answer_en: TODO(human)
+    answer_en: "My daughter. She's at school in the town and comes home at weekends."
     answer_sw: TODO(human)
     answer_es: "Tengo una hija. Va a la escuela en el pueblo y viene cada fin de semana."
-    verified: {en: false, sw: false, es: true}
+    verified: {en: true, sw: false, es: true}   # en from guest_bank_hr.yaml, see header
 
   - id: fair_price
     intent: general
@@ -559,10 +565,10 @@ entries:
       - "how is the price decided"
       - "do you know what buyers pay"
       - "is it a good living"
-    answer_en: TODO(human)
+    answer_en: "Better since the cooperative. Before that I took whatever the buyer named."
     answer_sw: TODO(human)
     answer_es: "El precio es mejor con la cooperativa. Antes tomaba el precio que daba el comprador."
-    verified: {en: false, sw: false, es: true}
+    verified: {en: true, sw: false, es: true}   # en from guest_bank_hr.yaml, see header
 
   - id: certification
     intent: general
@@ -572,10 +578,10 @@ entries:
       - "do you have any certification"
       - "is it rainforest alliance"
       - "are you certified organic"
-    answer_en: TODO(human)
+    answer_en: "The cooperative handles that. I don't hold one myself."
     answer_sw: TODO(human)
     answer_es: "La cooperativa hace eso. Yo no tengo nada de eso."
-    verified: {en: false, sw: false, es: true}
+    verified: {en: true, sw: false, es: true}   # en from guest_bank_hr.yaml, see header
 
   # ---------- LOGISTICS ----------
 
@@ -600,10 +606,10 @@ entries:
       - "how hard is the path"
       - "how far do we walk"
       - "is it muddy up there"
-    answer_en: TODO(human)
+    answer_en: "It's steep in two places. We stop when you need to."
     answer_sw: TODO(human)
     answer_es: "Está empinado en dos partes. Nos podemos detener cuando lo necesite."
-    verified: {en: false, sw: false, es: true}
+    verified: {en: true, sw: false, es: true}   # en from guest_bank_hr.yaml, see header
 
   - id: what_to_wear
     intent: logistics
@@ -613,10 +619,10 @@ entries:
       - "do I need boots"
       - "should I bring a jacket"
       - "will I get dirty"
-    answer_en: TODO(human)
+    answer_en: "Closed shoes. The ground stays wet under the trees."
     answer_sw: TODO(human)
     answer_es: "Zapato cerrado. La tierra está húmeda abajo de los árboles."
-    verified: {en: false, sw: false, es: true}
+    verified: {en: true, sw: false, es: true}   # en from guest_bank_hr.yaml, see header
 
   - id: toilet
     intent: logistics
@@ -639,10 +645,10 @@ entries:
       - "is there shade"
       - "can we rest somewhere"
       - "where do we wait"
-    answer_en: TODO(human)
+    answer_en: "There's a bench under the big tree. We can sit there."
     answer_sw: TODO(human)
     answer_es: "Hay una banca debajo del árbol. Nos podemos sentar ahí."
-    verified: {en: false, sw: false, es: true}
+    verified: {en: true, sw: false, es: true}   # en from guest_bank_hr.yaml, see header
 
   # ---------- SAFETY — all commitments ----------
 
@@ -782,13 +788,13 @@ entries:
 
   - id: other_things_nearby
     intent: general
-    commitment: false
+    commitment: true       # "the market on Thursdays" is a date claim she doesn't control
     paraphrases_en:
       - "what else is worth seeing around here"
       - "are there other farms to visit"
       - "what should we do next"
       - "is there a market nearby"
-    answer_en: TODO(human)
+    answer_en: "The cooperative store in the village, and the market on Thursdays."
     answer_sw: TODO(human)
     answer_es: "La tienda de la cooperativa en el pueblo y el tianguis de los jueves."
-    verified: {en: false, sw: false, es: true}
+    verified: {en: true, sw: false, es: true}   # en from guest_bank_hr.yaml, see header

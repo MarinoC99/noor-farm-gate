@@ -24,14 +24,35 @@ repo, selectable, as the documented hard case.
 
 ### What the review caught
 
-The reviewers read each Spanish answer against its English. For `social_media` they
-found the two say different things. The English says Noor is not on social media
-herself ("Post it if you like. I'm not on any of those myself."). The Spanish asks the
-guest to leave her out of the posts ("Súbalo si quiere. Sólo en las que no salga yo.").
-Both read naturally, and nothing in the tool, or in any check a machine could run on
-the text, would have flagged the mismatch. A person reading both did. We left that
-answer `es: false`, so it is never spoken, until the two are reconciled. This is the
+The reviewers read each Spanish answer against its English. Two pairs did not match.
+Both read naturally on each side, and nothing in the tool, or in any check a machine
+could run on the text, would have flagged them. People reading both did. This is the
 verification step doing its job, and the reason the flag exists.
+
+- **`social_media`.** The English says Noor is not on social media herself ("Post it
+  if you like. I'm not on any of those myself."). The Spanish asks the guest to leave
+  her out of the posts ("Súbalo si quiere. Sólo en las que no salga yo."). We left it
+  `es: false`, so it is never spoken, until the two are reconciled.
+- **`cooperative`.** Our English said the cooperative collects "the parchment"; the
+  reviewed Spanish says "los granos", the beans, which matched the English draft the
+  reviewers worked from. We changed the English to "beans". The Spanish is the
+  reviewed side; the English was ours.
+
+### What nobody checked: the inbound translation
+
+The reviewers checked the content we wrote. Nobody checks the guest's question as the
+machine translates it for Noor, because it is generated fresh for every guest. Our
+test run shows what that costs. For "where can I park", the translator wrote
+"¿Qué puedo aparcar?". "Aparcar" is the Spain Spanish word; Mexican and Bolivian
+speakers would say "estacionar". Noor heard a question phrased in a dialect she would
+not use. (Whisper had also misheard the question as "What can I park?", so the
+translation was of the wrong question too; see the next section.)
+
+Our reviewers caught two mismatches in the content they checked. This one is on the
+inbound path, which nobody verified, and we found it only because the coding agent
+reading a test trace happened to notice. That is the gap, demonstrated. The guest's
+question is the one thing the tool says that no human checked, and it is the thing
+Noor's whole check rests on.
 
 We could not tell the difference between the two kinds of text from the text alone.
 The system enforces the distinction in code, but code cannot tell you whether a human

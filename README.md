@@ -24,9 +24,8 @@ Built for the Small AI for Development hackathon, tourism challenge.
 and the summary view (Stage 3) are not built. Two front ends over the same pipeline: a
 terminal app, and a one-page web UI for a phone held between two people. Tested on one
 Intel Mac, macOS 15. **Spanish is partly filled:** the stop phrases and sixteen answers
-are reviewed by native speakers and verified. An answer is spoken only when its English
-is verified too, which is true for five of them so far. Every other question stops,
-saying why in Spanish.
+are reviewed by native speakers and verified, and fifteen of those can be spoken (the
+sixteenth is a commitment). Every other question stops, saying why in Spanish.
 
 ## How it works
 
