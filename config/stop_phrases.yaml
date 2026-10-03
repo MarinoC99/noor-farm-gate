@@ -3,7 +3,9 @@
 # What the tool says to NOOR when it will not answer, in her language. The guest hears
 # nothing. `en` is a gloss for us and for the screen; it is never spoken.
 #
-# es — Spanish, Noor's language. Written by Spanish speakers; TODO(human) until then.
+# es — Spanish, Noor's language. Reviewed by a Bolivian Spanish speaker on 3 October.
+#      The reviewer typed without accents; the team added them afterwards (sé, tú,
+#      cómo, respóndela). They change espeak's stress to the intended reading.
 # sw — Swahili, the documented hard case. Machine-translated and NOT reviewed by a
 #      Swahili speaker. An earlier version of this file said it had been checked by
 #      one; that was not true.
@@ -25,29 +27,29 @@ phrases:
   no_match:
     en: "I don't know this one."
     sw: "Sijui hili."
-    es: TODO(human)
-    verified: {sw: false, es: false}
+    es: "No sé la respuesta de esta."
+    verified: {sw: false, es: true}
 
   money:
     en: "This one is about money — you answer it."
     sw: "Hili ni kuhusu pesa. Jibu wewe mwenyewe."
-    es: TODO(human)
-    verified: {sw: false, es: false}
+    es: "Esta es sobre dinero — tú respóndela."
+    verified: {sw: false, es: true}
 
   date:
     en: "This one is about a date — you answer it."
     sw: "Hili ni kuhusu tarehe. Jibu wewe mwenyewe."
-    es: TODO(human)
-    verified: {sw: false, es: false}
+    es: "Esta es sobre una fecha — tú respóndela."
+    verified: {sw: false, es: true}
 
   safety:
     en: "This one is about safety — you answer it."
     sw: "Hili ni kuhusu usalama. Jibu wewe mwenyewe."
-    es: TODO(human)
-    verified: {sw: false, es: false}
+    es: "Esta es sobre seguridad — tú respóndela."
+    verified: {sw: false, es: true}
 
   default:
-    en: "I don't know this one."
+    en: "I don't know how to answer this one."
     sw: "Sijui hili."
-    es: TODO(human)
-    verified: {sw: false, es: false}
+    es: "No sé cómo responder esta."
+    verified: {sw: false, es: true}

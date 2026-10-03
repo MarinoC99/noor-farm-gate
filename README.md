@@ -23,9 +23,10 @@ Built for the Small AI for Development hackathon, tourism challenge.
 **Status:** Stage 1 only: the guest side, end to end. Noor's own phrase bank (Stage 2)
 and the summary view (Stage 3) are not built. Two front ends over the same pipeline: a
 terminal app, and a one-page web UI for a phone held between two people. Tested on one
-Intel Mac, macOS 15. **The Spanish answers and stop phrases are being written by
-Spanish speakers on the team and are still `TODO(human)`**, so until they land the
-Spanish configuration stops on every question and runs only with `--allow-unverified`.
+Intel Mac, macOS 15. **Spanish is partly filled:** the stop phrases and sixteen answers
+are reviewed by native speakers and verified. An answer is spoken only when its English
+is verified too, which is true for five of them so far. Every other question stops,
+saying why in Spanish.
 
 ## How it works
 
@@ -54,11 +55,10 @@ scripts/fetch_models.sh                    # one-time download + quantize; the o
 .venv/bin/python -m src.app.stage1         # press Enter, ask a question, press Enter
 ```
 
-The app refuses to start if Noor's language has unverified stop phrases. Right now that
-is true of both languages, so add `--allow-unverified` to run either:
+The app refuses to start if Noor's language has unverified stop phrases. Spanish does
+not; Swahili does, so the comparison needs the flag:
 
 ```bash
-.venv/bin/python -m src.app.stage1 --allow-unverified                 # Spanish (default)
 .venv/bin/python -m src.app.stage1 --allow-unverified --language sw   # the Swahili comparison
 ```
 
@@ -66,7 +66,7 @@ No microphone? On a Mac, make test audio with `say`:
 
 ```bash
 say -o /tmp/q.wav --data-format=LEI16@16000 "where can I park"
-.venv/bin/python -m src.app.stage1 --allow-unverified --wav /tmp/q.wav
+.venv/bin/python -m src.app.stage1 --wav /tmp/q.wav
 ```
 
 The run prints every intermediate value: transcript, translation, top three match
@@ -76,7 +76,7 @@ answer is offered, press Enter to play Noor's tap.
 ### On a phone (web UI)
 
 ```bash
-.venv/bin/python -m src.web.server --allow-unverified    # http://localhost:8000, bound to 0.0.0.0
+.venv/bin/python -m src.web.server         # http://localhost:8000, bound to 0.0.0.0
 ```
 
 `--language` and `--allow-unverified` work as in the terminal app. The page shows

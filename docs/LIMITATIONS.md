@@ -10,14 +10,28 @@ the Swahili voice's training dataset come from our own licence research, recorde
 Noor's language is Spanish by default (`config/language.yaml`). Swahili stays in the
 repo, selectable, as the documented hard case.
 
-- **Spanish** answers and stop phrases are written and reviewed by Spanish speakers on
-  the team. At the time of writing they are still `TODO(human)` in the files, so the
-  Spanish configuration answers nothing yet. A line is marked verified only after one
-  of them has read it.
+- **Spanish** stop phrases were reviewed by a Bolivian Spanish speaker on 3 October and
+  are verified. The reviewer typed without accents; the team added them afterwards. They
+  change how the voice stresses four words, toward the intended reading (see
+  `config/stop_phrases.yaml`). Seventeen Spanish answers were reviewed by two native
+  speakers in the room, one Mexican and one Bolivian; sixteen are verified and one was
+  held back (below). The rest are still `TODO(human)`. A line is marked verified only
+  after a Spanish speaker has read it.
 - **Swahili** answers and stop phrases were machine-translated and were not reviewed by
   a Swahili speaker (see "Our Swahili is machine-translated" below).
 - **English** answers are written by the team. Each carries its own `en` flag, and the
   tool never speaks an unverified English line to a guest, in any mode.
+
+### What the review caught
+
+The reviewers read each Spanish answer against its English. For `social_media` they
+found the two say different things. The English says Noor is not on social media
+herself ("Post it if you like. I'm not on any of those myself."). The Spanish asks the
+guest to leave her out of the posts ("Súbalo si quiere. Sólo en las que no salga yo.").
+Both read naturally, and nothing in the tool, or in any check a machine could run on
+the text, would have flagged the mismatch. A person reading both did. We left that
+answer `es: false`, so it is never spoken, until the two are reconciled. This is the
+verification step doing its job, and the reason the flag exists.
 
 We could not tell the difference between the two kinds of text from the text alone.
 The system enforces the distinction in code, but code cannot tell you whether a human
@@ -270,9 +284,12 @@ Swahili-to-English text model, `opus-mt-swc-en`, is trained on Congolese Swahili
 
 Spanish is different, and that sharpens the point. `Helsinki-NLP/opus-mt-es-en` does
 exist (`license: apache-2.0`), so free-form speech from Noor would be technically
-possible in Spanish. We kept the fixed bank anyway. It is not a workaround for a
-missing model: the safety claim is the point. Whatever reaches the guest was written
-and verified in advance, in every language we support.
+possible in Spanish. We kept the fixed bank anyway.
+
+In Spanish, `opus-mt-es-en` exists and we chose not to use it; in Swahili no such model
+exists. Same rule, different reasons, and only one of them is a constraint. The fixed
+bank is a safety decision, not a workaround: whatever reaches the guest was written and
+verified in advance, in every language we support.
 
 ## This runs on a laptop, not yet on a phone
 

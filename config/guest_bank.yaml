@@ -8,6 +8,9 @@
 # answer_en  — what Noor would say, in her words, spoken to the guest. Short.
 # answer_es  — Spanish, Noor's language: what she hears read back before she taps.
 #              It is her check that the English is right, so it must match in meaning.
+#              Reviewed answers: one Mexican and one Bolivian speaker, 3 October. The team
+#              made three spelling/tense edits afterwards (cooperative, what_to_wear,
+#              climate_change).
 # answer_sw  — Swahili, kept as the documented hard case. Machine-translated; nobody
 #              who speaks Swahili has reviewed it.
 #
@@ -465,8 +468,8 @@ entries:
       - "what fertiliser do you use"
     answer_en: TODO(human)
     answer_sw: TODO(human)
-    answer_es: TODO(human)
-    verified: {en: false, sw: false, es: false}
+    answer_es: "No mucho. Composta de la pulpa, y sólo ponemos cuando hay barrenadores."
+    verified: {en: false, sw: false, es: true}
 
   - id: water_source
     intent: general
@@ -478,8 +481,8 @@ entries:
       - "what happens in a dry year"
     answer_en: TODO(human)
     answer_sw: TODO(human)
-    answer_es: TODO(human)
-    verified: {en: false, sw: false, es: false}
+    answer_es: "De un manantial. Cargamos el agua cuando hay sequías."
+    verified: {en: false, sw: false, es: true}
 
   - id: climate_change
     intent: general
@@ -491,8 +494,8 @@ entries:
       - "is it getting harder to grow"
     answer_en: TODO(human)
     answer_sw: TODO(human)
-    answer_es: TODO(human)
-    verified: {en: false, sw: false, es: false}
+    answer_es: "Las lluvias llegan más tarde. Eso es lo que cambió."
+    verified: {en: false, sw: false, es: true}
 
   # ---------- NOOR AND THE COOPERATIVE ----------
 
@@ -506,8 +509,8 @@ entries:
       - "was this your parents' land"
     answer_en: "All my life. This was my parents' land before it was mine."
     answer_sw: "Maisha yangu yote. Hili lilikuwa shamba la wazazi wangu kabla ya kuwa langu."
-    answer_es: TODO(human)
-    verified: {en: true, sw: false, es: false}
+    answer_es: "Toda la vida. La tierra era de mis papás antes que fuera mía."
+    verified: {en: true, sw: false, es: true}
 
   - id: cooperative
     intent: general
@@ -519,8 +522,8 @@ entries:
       - "how long have you been a member"
     answer_en: "Yes, the Ondera Coffee Cooperative. Eleven years now. They collect the parchment from us after harvest."
     answer_sw: "Ndiyo, Chama cha Ushirika cha Kahawa cha Ondera. Miaka kumi na mmoja sasa. Wanachukua kahawa ya maganda kutoka kwetu baada ya mavuno."
-    answer_es: TODO(human)
-    verified: {en: true, sw: false, es: false}
+    answer_es: "Sí, estoy con la Cooperativa Cafetera de Ondera desde hace once años. Ellos recolectan los granos después de cada cosecha."
+    verified: {en: true, sw: false, es: true}
 
   - id: where_coffee_goes
     intent: general
@@ -532,8 +535,8 @@ entries:
       - "who do you sell to"
     answer_en: TODO(human)
     answer_sw: TODO(human)
-    answer_es: TODO(human)
-    verified: {en: false, sw: false, es: false}
+    answer_es: "La cooperativa lo lleva a subasta. No sé nada después de eso."
+    verified: {en: false, sw: false, es: true}
 
   - id: family
     intent: general
@@ -545,8 +548,8 @@ entries:
       - "will your children farm too"
     answer_en: TODO(human)
     answer_sw: TODO(human)
-    answer_es: TODO(human)
-    verified: {en: false, sw: false, es: false}
+    answer_es: "Tengo una hija. Va a la escuela en el pueblo y viene cada fin de semana."
+    verified: {en: false, sw: false, es: true}
 
   - id: fair_price
     intent: general
@@ -558,8 +561,8 @@ entries:
       - "is it a good living"
     answer_en: TODO(human)
     answer_sw: TODO(human)
-    answer_es: TODO(human)
-    verified: {en: false, sw: false, es: false}
+    answer_es: "El precio es mejor con la cooperativa. Antes tomaba el precio que daba el comprador."
+    verified: {en: false, sw: false, es: true}
 
   - id: certification
     intent: general
@@ -571,8 +574,8 @@ entries:
       - "are you certified organic"
     answer_en: TODO(human)
     answer_sw: TODO(human)
-    answer_es: TODO(human)
-    verified: {en: false, sw: false, es: false}
+    answer_es: "La cooperativa hace eso. Yo no tengo nada de eso."
+    verified: {en: false, sw: false, es: true}
 
   # ---------- LOGISTICS ----------
 
@@ -586,8 +589,8 @@ entries:
       - "is the road passable"
     answer_en: "By the big tree at the bottom, where the track widens. The road above that gets bad after rain."
     answer_sw: "Pale chini kwenye mti mkubwa, njia inapopanuka. Juu ya hapo barabara huharibika baada ya mvua."
-    answer_es: TODO(human)
-    verified: {en: true, sw: false, es: false}
+    answer_es: "Junto al árbol grande, el que está donde se agranda el sendero. El camino de arriba se pone feo cuando llueve."
+    verified: {en: true, sw: false, es: true}
 
   - id: walking_difficulty
     intent: logistics
@@ -599,8 +602,8 @@ entries:
       - "is it muddy up there"
     answer_en: TODO(human)
     answer_sw: TODO(human)
-    answer_es: TODO(human)
-    verified: {en: false, sw: false, es: false}
+    answer_es: "Está empinado en dos partes. Nos podemos detener cuando lo necesite."
+    verified: {en: false, sw: false, es: true}
 
   - id: what_to_wear
     intent: logistics
@@ -612,8 +615,8 @@ entries:
       - "will I get dirty"
     answer_en: TODO(human)
     answer_sw: TODO(human)
-    answer_es: TODO(human)
-    verified: {en: false, sw: false, es: false}
+    answer_es: "Zapato cerrado. La tierra está húmeda abajo de los árboles."
+    verified: {en: false, sw: false, es: true}
 
   - id: toilet
     intent: logistics
@@ -625,8 +628,8 @@ entries:
       - "is there somewhere to wash my hands"
     answer_en: "Yes, behind the house. There's water by the door to wash your hands."
     answer_sw: "Ndiyo, choo kiko nyuma ya nyumba. Kuna maji mlangoni, unawe mikono."
-    answer_es: TODO(human)
-    verified: {en: true, sw: false, es: false}
+    answer_es: "Sí, atrás de la casa. Hay agua junto a la puerta para que se lave las manos."
+    verified: {en: true, sw: false, es: true}
 
   - id: shelter_or_seating
     intent: logistics
@@ -638,8 +641,8 @@ entries:
       - "where do we wait"
     answer_en: TODO(human)
     answer_sw: TODO(human)
-    answer_es: TODO(human)
-    verified: {en: false, sw: false, es: false}
+    answer_es: "Hay una banca debajo del árbol. Nos podemos sentar ahí."
+    verified: {en: false, sw: false, es: true}
 
   # ---------- SAFETY — all commitments ----------
 
@@ -720,8 +723,8 @@ entries:
       - "do you mind the camera"
     answer_en: "Take as many as you like. Ask me first if you want a photo of me."
     answer_sw: "Piga picha nyingi unavyotaka. Ukitaka kunipiga picha mimi, niulize kwanza."
-    answer_es: TODO(human)
-    verified: {en: true, sw: false, es: false}
+    answer_es: "Tome todas las que quiera. Pregúnteme antes de tomarme a mí."
+    verified: {en: true, sw: false, es: true}
 
   - id: social_media
     intent: general
@@ -733,8 +736,8 @@ entries:
       - "do you have a website"
     answer_en: TODO(human)
     answer_sw: TODO(human)
-    answer_es: TODO(human)
-    verified: {en: false, sw: false, es: false}
+    answer_es: "Súbalo si quiere. Sólo en las que no salga yo."
+    verified: {en: false, sw: false, es: false}   # es: reviewers found the Spanish says something different from the English; see docs/LIMITATIONS.md
 
   # ---------- THINGS SHE MAY NOT OFFER — keep these ----------
 
@@ -787,5 +790,5 @@ entries:
       - "is there a market nearby"
     answer_en: TODO(human)
     answer_sw: TODO(human)
-    answer_es: TODO(human)
-    verified: {en: false, sw: false, es: false}
+    answer_es: "La tienda de la cooperativa en el pueblo y el tianguis de los jueves."
+    verified: {en: false, sw: false, es: true}
