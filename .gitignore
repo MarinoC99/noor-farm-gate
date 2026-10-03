@@ -1,0 +1,10 @@
+models/*
+!models/.gitkeep
+.venv/
+__pycache__/
+node_modules/
+.DS_Store
+
+# The concept note is marked "Official Use Only". Kept out of the repo, which may
+# become public as the submission's code link.
+file-2.pdf

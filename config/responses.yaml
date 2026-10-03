@@ -1,0 +1,26 @@
+# TODO(human): this file is a safety surface (CLAUDE.md, "Decisions you do not
+# make alone"). It is the complete list of things the tool may offer to send.
+# The tool may pick a template and fill its slots. It may not write or translate
+# new text. Every template is a pre-translated pair, checked by a person who reads
+# both languages.
+#
+# Schema, enforced by scripts/verify.py (templates, abstain and route checks):
+#
+#   abstain_id: id of the "not sure, ask a person" template. Must exist below.
+#   templates:
+#     - id: lowercase_snake_case, unique
+#       intent: the intent this template answers, or null for abstain
+#       slots:                          # every {placeholder} used in text, mapped
+#         day: "(Monday|Saturday)"      # to a regex the filled value must fully match
+#       text:                           # FLORES-200 codes. Both are required:
+#         eng_Latn: "..."               #   what the guest receives
+#         swh_Latn: "..."               #   what Noor reads before approving
+#
+# Route to human has no template on purpose: it means no draft at all (CLAUDE.md,
+# "The abstain and route-to-human contract").
+#
+# Empty on purpose. verify.py fails until a human writes the templates.
+
+version: 1
+abstain_id: abstain
+templates: []
