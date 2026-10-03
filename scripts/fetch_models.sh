@@ -24,6 +24,8 @@ WHISPER_REPO=openai/whisper-base.en   # English-only checkpoint; guests speak En
 WHISPER_REV=911407f4214e0e1d82085af863093ec0b66f9cd6
 OPUS_REPO=Helsinki-NLP/opus-mt-en-sw
 OPUS_REV=28780399d37e1161afc94577a717d7fcfa54fecc
+OPUS_ES_REPO=Helsinki-NLP/opus-mt-en-es
+OPUS_ES_REV=5bc4493d463cf000c1f0b50f8d56886a392ed4ab
 MINILM_REPO=sentence-transformers/all-MiniLM-L6-v2
 MINILM_REV=1110a243fdf4706b3f48f1d95db1a4f5529b4d41
 PIPER_REPO=rhasspy/piper-voices
@@ -72,6 +74,14 @@ for f in config.json generation_config.json pytorch_model.bin source.spm target.
 done
 convert "$O_SRC" "$MODELS/opus-mt-en-sw-ct2-int8" source.spm target.spm README.md
 
+echo "== opus-mt-en-es -> CTranslate2 int8"
+OES_SRC="$SRC/opus-mt-en-es"
+for f in config.json generation_config.json pytorch_model.bin source.spm target.spm \
+         vocab.json tokenizer_config.json README.md; do
+  fetch "$OPUS_ES_REPO" "$OPUS_ES_REV" "$f" "$OES_SRC/$f"
+done
+convert "$OES_SRC" "$MODELS/opus-mt-en-es-ct2-int8" source.spm target.spm README.md
+
 echo "== all-MiniLM-L6-v2, 8-bit ONNX (published by the model authors, no conversion)"
 # The repo ships one int8 file per CPU family. A phone is arm64; this laptop may not be.
 case "$(uname -m)" in
@@ -86,6 +96,7 @@ done
 
 echo "== Piper voices (ONNX as published)"
 for v in sw/sw_CD/lanfrica/medium/sw_CD-lanfrica-medium \
+         es/es_MX/claude/high/es_MX-claude-high \
          en/en_US/ljspeech/medium/en_US-ljspeech-medium; do
   name="$(basename "$v")"
   for ext in onnx onnx.json; do

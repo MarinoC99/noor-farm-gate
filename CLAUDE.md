@@ -33,20 +33,34 @@ temporary exception, do not defer one. If a task appears to require breaking one
    fetching weights at runtime. Weights are bundled in `models/` before the app
    starts. Network is allowed only in `scripts/` for the one-time model fetch.
 
-2. **Nothing is ever spoken that a human did not write.** *Ours; how we meet "avoid
-   hallucinations".* Every sentence the tool says, to the guest or to Noor, is a field
-   from one of three files: `guest_bank.yaml`, `noor_bank.yaml`, `stop_phrases.yaml`.
-   There is no generation anywhere. There is no threshold above which unverified text
-   is allowed through. The one exception is the guest's own question translated into
-   Swahili for Noor to understand — that is shown to her, never spoken to anyone else.
-   Only `verified: true` entries and phrases may be spoken; the Speaker raises on
-   anything else, and `scripts/check_rule2.py` checks the real files.
+2. **The tool speaks only what is in the files, and only verified languages by
+   default.** *Ours; how we meet "avoid hallucinations".*
 
-3. **No Swahili → English translation.** *Ours; not in the concept note.* Licensed
-   models can do it: Whisper translates Swahili speech straight to English. We don't
-   use them, because the output is free-form English that no human checked, spoken
-   to a guest, which breaks rule 2. Noor's side of the conversation is pre-written
-   English.
+   a) The tool speaks only strings present in `guest_bank.yaml`, `noor_bank.yaml` and
+      `stop_phrases.yaml`. Never generated at runtime, in any mode. This is absolute,
+      with one exception, inward only: the guest's own question, machine-translated
+      into Noor's language, is shown to Noor and spoken only to her, in the presence
+      of the person who said it. Those are the guest's own words. Nothing unverified
+      ever goes outward to a guest. Our claim is "every string that reaches a guest is
+      verified", not "every string is verified". Never write the second.
+
+   b) It speaks a Noor-language string marked unverified only when
+      `--allow-unverified` is explicitly set. Each such line logs a warning naming
+      where it came from, never its text, and the UI must show that the active
+      language is unverified for as long as that mode is on. The flag never applies
+      to anything spoken to the guest: an English answer must be verified in every
+      mode. `scripts/check_rule2.py` checks both paths, terminal and web.
+
+   Why: a machine draft that a human reads and corrects is verified. A machine draft
+   nobody reads is not. Our Swahili is the second case, and we found out only by
+   asking. The code can enforce which bucket a string is in; it cannot tell you
+   whether a human actually read it.
+
+3. **No translation from Noor's language into English.** *Ours; not in the concept
+   note.* Licensed models can do it: Whisper translates Swahili speech straight to
+   English, and `opus-mt-es-en` translates Spanish text. We don't use them, because the
+   output is free-form English that no human checked, spoken to a guest, which breaks
+   rule 2. Noor's side of the conversation is pre-written English.
 
 4. **Commitments always stop.** *Ours; how we meet "a person makes the final call".*
    Dates, money, what is included, any safety assurance. Never auto-answered from the
@@ -54,9 +68,13 @@ temporary exception, do not defer one. If a task appears to require breaking one
    entry's `commitment` flag, and a word in `config/commitment_triggers.yaml` found in
    the guest's English transcript.
 
-5. **Model budget 400 MB total on disk, quantized.** *Ours; the concept note asks
-   only for files small enough to side-load.* Measure it, don't estimate it.
-   If something will not fit, say so rather than quietly swapping in another model.
+5. **Model budget 400 MB per language stack, quantized.** *Ours; the concept note asks
+   only for files small enough to side-load.* A phone ships one Noor language: the
+   shared English models, that language's translator and voice, and the phonemizer
+   data. That stack must fit. Report both numbers every time: each shipped stack, and
+   the dev total of everything in `models/`. Measure them with
+   `scripts/measure_models.py`, don't estimate. If a stack will not fit, say so rather
+   than quietly swapping in another model.
 
 6. **Licences must permit commercial use, or be documented.** *Ours; the concept
    note asks entrants to check terms, not for this.* Noor runs a business.

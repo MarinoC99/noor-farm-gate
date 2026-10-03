@@ -1,11 +1,13 @@
 """Stage 1, guest side, one question end to end. Terminal stand-in for the screen.
 
-  guest speaks English -> Whisper -> opus-mt en->sw -> Piper speaks it to Noor + shows it
+Noor's language comes from config/language.yaml (default Spanish), or --language.
+
+  guest speaks English -> Whisper -> opus-mt en->Noor's language -> spoken to Noor + shown
   -> MiniLM matches the English question against guest_bank.yaml
-       BANK        -> read Noor the Swahili answer -> she taps -> English answer to guest
-       COMMITMENT  -> say why in Swahili -> stop at the Noor's-bank placeholder (Stage 2)
+       BANK        -> read Noor her answer -> she taps -> English answer to guest
+       COMMITMENT  -> say why, in her language -> stop at the Noor's-bank placeholder
                       (the entry's flag, or a trigger word anywhere in the question)
-       WEAK_MATCH  -> say so in Swahili  -> stop at the same placeholder
+       WEAK_MATCH  -> say so, in her language -> stop at the same placeholder
        NO_MATCH    -> same; recorded apart from WEAK_MATCH for the Stage 3 summary
 
 Prints every intermediate value to the terminal. That trace is the debugging view asked
@@ -15,6 +17,8 @@ exchange record in records/exchanges.jsonl. Audio is never written.
   .venv/bin/python -m src.app.stage1              # microphone
   .venv/bin/python -m src.app.stage1 --wav F      # test file instead of the microphone
   .venv/bin/python -m src.app.stage1 --mute       # synthesize, but do not play
+  .venv/bin/python -m src.app.stage1 --language sw --allow-unverified
+                                                  # the Swahili comparison (unverified)
   ... --wav F --trace-out results/demo_runs/x.json --note "what F contains"
                                                   # save the intermediate values as JSON;
                                                   # test files only, never a real guest
@@ -31,7 +35,6 @@ import yaml
 from src.pipeline import offline
 
 ROOT = Path(__file__).resolve().parents[2]
-MODELS = ROOT / "models"
 CONFIG = ROOT / "config"
 RECORDS = ROOT / "records" / "exchanges.jsonl"
 
@@ -74,8 +77,19 @@ def record_from_microphone(sample_rate):
     return np.concatenate(chunks) if chunks else np.zeros(0, dtype=np.float32)
 
 
+# Set in main(). The banner is set when --allow-unverified is on and Noor's language
+# has unverified text; every Noor panel then carries it (CLAUDE.md rule 2b).
+NOOR_TITLE = "NOOR"
+UNVERIFIED_BANNER = None
+
+
+def noor_screen(lines):
+    banner = [UNVERIFIED_BANNER, ""] if UNVERIFIED_BANNER else []
+    screen(NOOR_TITLE, banner + lines)
+
+
 def noor_bank_placeholder():
-    screen("NOOR (Kiswahili)", [
+    noor_screen([
         "[ NOOR'S BANK: placeholder ]",
         "Stage 2 is not built. Her phrase list will open here.",
     ])
@@ -85,9 +99,12 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--wav", type=Path, help="audio file to use instead of the microphone")
     parser.add_argument("--mute", action="store_true", help="synthesize speech but do not play it")
+    parser.add_argument("--language", help="Noor's language code from config/language.yaml "
+                                            "(default: its noor_language)")
     parser.add_argument("--allow-unverified", action="store_true",
-                        help="speak bank and stop text not marked verified: true, logging a "
-                             "warning for each line (off by default; CLAUDE.md rule 2)")
+                        help="speak Noor-language text not marked verified, logging a warning "
+                             "for each line; never applies to the guest (off by default; "
+                             "CLAUDE.md rule 2b)")
     parser.add_argument("--trace-out", type=Path,
                         help="write the intermediate values to this JSON file (needs --wav)")
     parser.add_argument("--note", default="", help="with --trace-out: what the test audio contains")
@@ -97,15 +114,22 @@ def main():
 
     offline.enforce()
 
+    from src.pipeline import language
     from src.pipeline.bank import StopPhrases, load_guest_bank
     from src.pipeline.models import SAMPLE_RATE, Embedder, Transcriber, Translator, Voice
     from src.pipeline.records import append_exchange, new_visit_id
     from src.pipeline.route import BANK, NOOR_BANK, Matcher, Triggers, decide
     from src.pipeline.speech import Speaker
 
+    global NOOR_TITLE, UNVERIFIED_BANNER
+    setup = language.load(ROOT, args.language)
+    lang = setup.language
+    NOOR_TITLE = f"NOOR ({lang.name})"
+
     section("load")
-    entries = load_guest_bank(CONFIG / "guest_bank.yaml")
-    stops = StopPhrases(CONFIG / "stop_phrases.yaml")
+    print(f"  Noor's language: {lang.name_en} ({lang.code})")
+    entries = load_guest_bank(CONFIG / "guest_bank.yaml", lang.code)
+    stops = StopPhrases(CONFIG / "stop_phrases.yaml", lang.code)
     matching = yaml.safe_load((CONFIG / "matching.yaml").read_text())
     threshold = float(matching["match_threshold"])
     floor = matching.get("weak_match_floor")
@@ -115,18 +139,23 @@ def main():
     triggers = Triggers(CONFIG / "commitment_triggers.yaml")
     print(f"  guest bank: {len(entries)} entries, "
           f"{sum(bool(e.paraphrases) for e in entries)} with written paraphrases, "
-          f"{sum(e.verified for e in entries)} verified, "
+          f"{sum(e.verified for e in entries)} verified in en+{lang.code}, "
           f"{sum(e.answerable for e in entries)} answerable (verified and commitment: false)")
     print(f"  stop phrases: " + ", ".join(
         f"{k}{'' if l.verified and l.text else ' (UNVERIFIED or TODO)'}" for k, l in stops.lines.items()))
     unverified_stops = [k for k, line in stops.lines.items() if not line.verified]
     if unverified_stops and not args.allow_unverified:
-        print(f"\n  REFUSING TO START: stop phrases not verified: {', '.join(unverified_stops)}.")
+        print(f"\n  REFUSING TO START: {lang.name_en} stop phrases not verified: "
+              f"{', '.join(unverified_stops)}.")
         print("  The tool would have to speak them. Run with --allow-unverified to hear")
         print("  unverified text anyway; every unverified line spoken logs a warning.")
         return 2
     if args.allow_unverified:
         print("  --allow-unverified: ON. Unverified lines will be spoken, each with a warning.")
+        if unverified_stops or not all(e.answer_noor.verified for e in entries if e.has_answers):
+            UNVERIFIED_BANNER = (f"!! UNVERIFIED LANGUAGE: the {lang.name_en} here has not been "
+                                 f"checked by a {lang.name_en} speaker")
+            print("  " + UNVERIFIED_BANNER)
     print(f"  match threshold: {threshold} (placeholder, see config/matching.yaml)")
     print(f"  weak match floor: {floor if floor is not None else 'not set: WEAK_MATCH is never recorded'}")
     print("  commitment triggers: " + ", ".join(f"{h} {len(t)}" for h, t in triggers.groups))
@@ -139,14 +168,12 @@ def main():
         timings[name] = time.perf_counter() - t0
         return out
 
-    asr = timed("load whisper", Transcriber, MODELS / "whisper-base.en-ct2-int8")
-    mt = timed("load opus-mt", Translator, MODELS / "opus-mt-en-sw-ct2-int8")
-    embedder = timed("load minilm", Embedder, MODELS / "all-MiniLM-L6-v2-onnx-int8")
+    asr = timed("load whisper", Transcriber, setup.asr)
+    mt = timed("load opus-mt", Translator, lang.translator)
+    embedder = timed("load minilm", Embedder, setup.matcher)
     voices = {
-        "sw": timed("load piper sw", Voice,
-                    MODELS / "piper/sw_CD-lanfrica-medium/sw_CD-lanfrica-medium.onnx"),
-        "en": timed("load piper en", Voice,
-                    MODELS / "piper/en_US-ljspeech-medium/en_US-ljspeech-medium.onnx"),
+        "noor": timed(f"load piper {lang.code}", Voice, lang.voice),
+        "guest": timed("load piper en", Voice, setup.guest_voice),
     }
     matcher = timed("index bank", Matcher, embedder, entries)
     speaker = Speaker(voices, play=not args.mute, allow_unverified=args.allow_unverified)
@@ -154,6 +181,7 @@ def main():
     timings.clear()
     visit_id = new_visit_id()
     trace = {"input": {"wav": args.wav.name if args.wav else None, "note": args.note},
+             "noor_language": lang.code, "allow_unverified": args.allow_unverified,
              "spoken": []}
 
     def say(source, line):
@@ -183,14 +211,14 @@ def main():
         return 1
 
     translated = timed("opus-mt", mt.translate, transcript)
-    section("3. translation en->sw (opus-mt, machine-made: shown and read to Noor only)")
+    section(f"3. translation en->{lang.code} (opus-mt, machine-made: shown and read to Noor only)")
     print(f"  {translated!r}")
 
     section("4. Noor's screen + her voice")
     screen("GUEST (English)", [transcript])
-    screen("NOOR (Kiswahili)", [translated])
-    trace.update(transcript=transcript, translation_sw=translated)
-    say("guest_question_sw", translated)
+    noor_screen([translated])
+    trace.update(transcript=transcript, translation_noor=translated)
+    say("guest_question_noor", translated)
 
     ranking = timed("match", matcher.rank, transcript)
     section("5. match scores (MiniLM cosine, English question vs. paraphrases)")
@@ -220,9 +248,9 @@ def main():
     route = decision.route
     if route == BANK:
         entry = decision.match.entry
-        screen("NOOR (Kiswahili)", [entry.answer_sw.text, "", "[ Enter: speak it to the guest ]",
-                                    "[ n + Enter: don't ]"])
-        say("bank_answer_sw", entry.answer_sw)
+        noor_screen([entry.answer_noor.text, "", "[ Enter: speak it to the guest ]",
+                     "[ n + Enter: don't ]"])
+        say("bank_answer_noor", entry.answer_noor)
         tap = input("  Noor: ").strip().lower()
         if tap == "n":
             print("  Noor declined. Nothing said to the guest.")
@@ -241,8 +269,9 @@ def main():
     record = append_exchange(
         RECORDS,
         visit_id=visit_id,
+        noor_language=lang.code,
         raw_transcript_en=transcript,
-        translated_sw=translated,
+        translated_noor=translated,
         matched_entry_id=matched.entry.id if matched else None,
         confidence=ranking[0].score if ranking else None,
         route=route,

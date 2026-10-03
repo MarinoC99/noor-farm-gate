@@ -18,11 +18,14 @@ question in Swahili, and the phone speaks back an answer she wrote herself.
 
 ## The one rule everything else follows from
 
-The tool can only ever say sentences a human wrote in advance. In both directions.
+Every sentence that reaches a guest was written by a human in advance and checked.
+The one thing the tool says that nobody checked is the guest's own question,
+machine-translated and spoken only to Noor, in front of the guest who asked it, so she
+knows what was asked.
 
 We wrote the answers to the questions guests usually ask. We also wrote the thirty
 or so things Noor often needs to say back. The tool picks the right one. It never
-makes up a sentence.
+makes up an answer.
 
 Why this matters: if the tool could say anything, nobody could check whether it says
 something wrong or harmful. A confident wrong answer about her prices or her food
@@ -41,6 +44,25 @@ project that doesn't finish.
 Being honest about what this costs us: Swahili is well-supported by African
 standards. Google's offline packs already cover it. We are not solving the hardest
 version of this problem.
+
+## Noor now speaks Spanish (changed 3 October)
+
+Swahili was the plan above. We switched Noor's side to Spanish; the guest stays English.
+
+Why: the string that most needs verifying is the one Noor hears before she approves an
+answer. That is her entire check. Our Swahili turned out to be machine-translated and
+never reviewed by a Swahili speaker, so that check was resting on text nobody had
+read. With Spanish on Noor's side, the answers she hears are written and reviewed by
+Spanish speakers on the team, and every string that reaches a guest is verified.
+
+- Translation: `opus-mt-en-es`. Voice: Piper `es_MX-claude-high`, chosen for being Latin
+  American with an Apache-2.0 licence line. Its training data is not stated anywhere
+  we found; `docs/LIMITATIONS.md` says so.
+- Swahili stays in the repo, selectable with `--language sw`, flagged unverified, as
+  the documented hard case. It speaks only with `--allow-unverified`.
+- We tried Croatian first. A translation model exists; a voice does not. Piper's only
+  "Serbian" voice is Sorbian data under a non-commercial licence.
+- One setting, `config/language.yaml`, picks the language for both front ends.
 
 ## Noor doesn't speak into the tool — she taps
 
@@ -63,7 +85,8 @@ the one rule above, not what models exist.
   vocabulary, heavy French borrowing.
 
 So instead she picks from a list of phrases we pre-wrote in both languages. Fewer
-options, but every word is verified, and the same safety claim covers her side too.
+options, but every word that reaches the guest is verified, and the same safety claim
+covers her side too.
 
 This turned out to be a better design than the one we wanted.
 
@@ -130,9 +153,11 @@ languages — and we still couldn't get what we needed.
 For something like Oromo or Luganda there'd be no translation model at all, and the
 tool wouldn't work.
 
-## Size limit: 400 MB
+## Size limit: 400 MB per language
 
-So it can be copied onto a phone without good internet.
+So it can be copied onto a phone without good internet. A phone ships one Noor
+language, so the limit applies to one language's stack, not to everything on the
+development laptop. We report both numbers.
 
 ## Audio is never saved
 

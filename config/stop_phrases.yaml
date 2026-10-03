@@ -1,12 +1,19 @@
 # stop_phrases.yaml
 #
-# What the tool says to NOOR when it will not answer. The guest hears nothing.
-# The Swahili here is machine-translated and was not reviewed by a Swahili speaker,
-# so every phrase is verified: false. An earlier version of this file said it had
-# been checked by a Swahili speaker; that was not true.
+# What the tool says to NOOR when it will not answer, in her language. The guest hears
+# nothing. `en` is a gloss for us and for the screen; it is never spoken.
+#
+# es — Spanish, Noor's language. Written by Spanish speakers; TODO(human) until then.
+# sw — Swahili, the documented hard case. Machine-translated and NOT reviewed by a
+#      Swahili speaker. An earlier version of this file said it had been checked by
+#      one; that was not true.
+#
+# verified — one flag per language, set only by a person who speaks it and has read
+#            the line. A stop phrase in an unverified language is spoken only with
+#            --allow-unverified, with a warning.
 #
 # Routing:
-#   no_match  — nothing matched, or the matched entry has no written answer
+#   no_match  — nothing matched, or the matched entry has no verified answer
 #   money     — matched entry has intent: money, or a money trigger word fired
 #   date      — a date trigger word fired (there is no "date" intent; this comes
 #               from config/commitment_triggers.yaml)
@@ -18,24 +25,29 @@ phrases:
   no_match:
     en: "I don't know this one."
     sw: "Sijui hili."
-    verified: false
+    es: TODO(human)
+    verified: {sw: false, es: false}
 
   money:
     en: "This one is about money — you answer it."
     sw: "Hili ni kuhusu pesa. Jibu wewe mwenyewe."
-    verified: false
+    es: TODO(human)
+    verified: {sw: false, es: false}
 
   date:
     en: "This one is about a date — you answer it."
     sw: "Hili ni kuhusu tarehe. Jibu wewe mwenyewe."
-    verified: false
+    es: TODO(human)
+    verified: {sw: false, es: false}
 
   safety:
     en: "This one is about safety — you answer it."
     sw: "Hili ni kuhusu usalama. Jibu wewe mwenyewe."
-    verified: false
+    es: TODO(human)
+    verified: {sw: false, es: false}
 
   default:
     en: "I don't know this one."
     sw: "Sijui hili."
-    verified: false
+    es: TODO(human)
+    verified: {sw: false, es: false}

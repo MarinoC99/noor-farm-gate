@@ -2,8 +2,55 @@
 
 What this tool cannot honestly claim. Facts about the voices come from the files that
 `scripts/fetch_models.sh` downloads into `models/piper/`, quoted as written. Facts about
-the training dataset come from our own licence research, recorded in `DECISIONS.md`;
-they were not re-checked for this document.
+the Swahili voice's training dataset come from our own licence research, recorded in
+`DECISIONS.md`; they were not re-checked for this document.
+
+## Who checked which language
+
+Noor's language is Spanish by default (`config/language.yaml`). Swahili stays in the
+repo, selectable, as the documented hard case.
+
+- **Spanish** answers and stop phrases are written and reviewed by Spanish speakers on
+  the team. At the time of writing they are still `TODO(human)` in the files, so the
+  Spanish configuration answers nothing yet. A line is marked verified only after one
+  of them has read it.
+- **Swahili** answers and stop phrases were machine-translated and were not reviewed by
+  a Swahili speaker (see "Our Swahili is machine-translated" below).
+- **English** answers are written by the team. Each carries its own `en` flag, and the
+  tool never speaks an unverified English line to a guest, in any mode.
+
+We could not tell the difference between the two kinds of text from the text alone.
+The system enforces the distinction in code, but code cannot tell you whether a human
+actually read something: the `verified` flag is only as true as the person who set it.
+
+What the tool says that nobody checked, in every configuration, is the guest's own
+question, machine-translated into Noor's language and spoken only to her. Our claim is
+that every string that reaches a guest is verified, not that every string is.
+
+## The Spanish voice's training data is not established
+
+Noor hears Spanish from Piper `es_MX-claude-high` (Mexican Spanish). Its `MODEL_CARD`
+says, in full, about its data and training:
+
+> ## Dataset
+>
+> * URL: https://huggingface.co/spaces/HirCoir/Piper-TTS-Spanish
+> * License: apache-2.0
+>
+> ## Training
+>
+> See URL above
+
+The URL is a Hugging Face Space, not a dataset. We checked it: its README carries
+`license: apache-2.0` and says nothing about training data or method. It hosts this
+voice's model file next to other voices named `cortana` and `jarvis`. We found no
+statement anywhere of what audio the voice was trained on, who recorded it, or
+whether it was fine-tuned from another voice. So we cannot say the voice is free of
+the lessac lineage that the Swahili voice carries; we can only say nobody has stated
+it. The licence line covers the Space. Whether it covers the recordings is unknown.
+
+The voice is swappable, as with Swahili: it reads text that was already chosen and
+plays no part in deciding what is said.
 
 ## The Swahili voice has no established licence
 
@@ -87,12 +134,30 @@ not reviewed by a Swahili speaker. Earlier versions of this repo said they had b
 checked by one. That was wrong, and we have corrected it.
 
 They are marked `verified: false`. The tool refuses to speak unverified text. Running
-with `--allow-unverified` speaks it anyway and logs a warning for every unverified line,
-so the Swahili stays runnable as a documented hard case, not a verified one.
+with `--allow-unverified` speaks it to Noor anyway, logs a warning for every unverified
+line, and shows on screen that the language is unverified, so the Swahili stays
+runnable as a documented hard case, not a verified one. The English answers the guest
+hears are verified separately and the flag never relaxes them.
 
-We could not tell the difference from the text alone. The system enforces the
-distinction in code, but code cannot tell you whether a human actually read
-something: the `verified` flag is only as true as the person who set it.
+### What we saw in the Swahili configuration
+
+Two problems we saw, recorded here because they are what an unverified language costs.
+Neither comes from a results file, so treat both counts as observations, not
+measurements:
+
+- **Inbound translation distorted three of five questions.** In one live session
+  (one team member's voice, five scripted questions; kept only in the local exchange
+  log, not in `results/`, because it is real speech), the Swahili that Noor heard was
+  off in three runs even where Whisper heard the English right: "tour" became a
+  competition (`mashindano`), "where can I park" gained a garden (`bustani`), and
+  "what's the altitude here" became "what is there in the mountains". That reading is
+  ours, not a Swahili speaker's.
+- **"farm" was mis-transcribed across two speakers.** "How big is your farm" was heard
+  as "thumb" from the synthetic `say` voice (`results/demo_runs/farm_size.json`) and as
+  "phone", twice, from a team member's voice in the live session. Both times the tool
+  stopped instead of answering.
+
+Spanish has not been through the same session yet. TODO(measure).
 
 ## The English voice
 
@@ -130,7 +195,7 @@ hears the translation of a question nobody asked, followed by the correct answer
 the one that was. Nothing in the tool tells her the two don't fit. She has to notice
 the mismatch herself.
 
-Our parking run shows it (`results/demo_runs/parking.json`). The test audio said
+Our parking run, in the Swahili configuration, shows it (`results/demo_runs/parking.json`). The test audio said
 "where can I park". Whisper wrote "What can I park?". Noor heard "Ninaweza kuegesha
 nini?", a faithful translation of the wrong question. The matcher still scored the
 parking entry at 0.8684, above the 0.75 threshold, and the tool read her the correct
@@ -167,6 +232,23 @@ the phone stays at the farm. We assume it is there when guests arrive. On days i
 not, the guide still does the job, as today. We have not resolved this, and the tool
 does nothing about it.
 
+## Less-supported languages: what we found for Croatian
+
+Before Spanish we tried Croatian, and it stopped at the voice:
+
+- **Translation exists.** Helsinki-NLP has no direct `en-hr` model, but the Serbo-
+  Croatian `opus-mt-tc-base-en-sh` (`license: cc-by-4.0`) and the South Slavic
+  `opus-mt-en-zls` (`license: apache-2.0`) both translate into Croatian with a
+  `>>hrv<<` target token.
+- **No voice exists.** Piper has no Croatian voice and no Bosnian one. Its only
+  "Serbian" voice, `sr_RS-serbski_institut-medium`, is not Serbian: "Serbski institut" is
+  the Sorbian Institute, its two speakers are labelled `dsb` and `hsb` (Lower and Upper
+  Sorbian), its dataset licence is `https://creativecommons.org/licenses/by-nc-sa/4.0/`
+  (non-commercial), and it was "Finetuned from U.S. English lessac voice".
+
+A language with millions of speakers, a translation model and a phonemizer still had
+no usable voice. For a less-supported language the gap would start earlier.
+
 ## Noor taps; she does not speak
 
 Noor chooses from pre-written phrases instead of speaking freely. The reason is not
@@ -178,16 +260,36 @@ of our notes said no Swahili speech recognition with a commercial licence existe
 That was wrong.
 
 We don't use it because what it produces is free-form English that no human checked,
-spoken to a guest. That breaks the rule the whole tool rests on: it only says
-sentences a human wrote in advance. Any route that transcribes her Swahili and then
-machine-translates it has the same problem. A second, smaller reason: how well a
+spoken to a guest. That breaks the rule the whole tool rests on: every sentence that
+reaches a guest was written and verified by a human in advance. Any route that
+transcribes her Swahili and then machine-translates it has the same problem. A second, smaller reason: how well a
 Whisper model small enough for our budget handles Noor's Swahili is unmeasured.
 
 The text-only route is weaker still. There is no `opus-mt-sw-en`, and the only
 Swahili-to-English text model, `opus-mt-swc-en`, is trained on Congolese Swahili.
 
+Spanish is different, and that sharpens the point. `Helsinki-NLP/opus-mt-es-en` does
+exist (`license: apache-2.0`), so free-form speech from Noor would be technically
+possible in Spanish. We kept the fixed bank anyway. It is not a workaround for a
+missing model: the safety claim is the point. Whatever reaches the guest was written
+and verified in advance, in every language we support.
+
 ## This runs on a laptop, not yet on a phone
 
-The prototype is Python on an Intel Mac. The model stack was chosen to fit a phone
-(see `data/INVENTORY.md` for measured sizes), but CTranslate2 and Piper have not been
-built or run on Android or iOS in this project. TODO(measure): on-device run.
+The prototype is Python on an Intel Mac. The model stack was chosen to fit a phone,
+but CTranslate2 and Piper have not been built or run on Android or iOS in this project.
+TODO(measure): on-device run.
+
+The 400 MB budget applies to one shipped language stack, because a phone carries one
+Noor language. The Spanish stack measures within it; the laptop, which holds both
+languages, does not. Both numbers are in `data/INVENTORY.md`, read from
+`results/model_budget.json`.
+
+The web UI (`src/web/`) puts the screen, microphone and speaker on a phone, but every
+model still runs on the laptop. To reach the laptop from a phone with HTTPS (which
+phone browsers require for the microphone), we use a tunnel. That carries the guest's
+recorded question and the reply audio across the internet through the tunnel
+provider. The laptop makes no network call at inference, but the phone setup as a
+whole is not offline, and it sends guest audio somewhere, which our own rules forbid.
+We use it only with our own voices. An offline phone setup would need the phone and
+laptop on a local network with a certificate the phone trusts; we have not built it.

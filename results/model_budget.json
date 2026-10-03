@@ -1,18 +1,63 @@
 {
-  "measured_at": "2026-10-03T21:17:15+00:00",
+  "measured_at": "2026-10-03T23:38:38+00:00",
   "machine": "x86_64",
   "budget_bytes": 400000000,
-  "models_dir_total_bytes": 309198213,
-  "models_dir_total_mb": 309.2,
-  "models_dir_within_budget": true,
-  "models_dir_headroom_mb": 90.8,
+  "budget_applies_to": "each shipped language stack (CLAUDE.md rule 5)",
+  "stacks": {
+    "es": {
+      "parts": {
+        "asr": "models/whisper-base.en-ct2-int8",
+        "matcher": "models/all-MiniLM-L6-v2-onnx-int8",
+        "guest_voice": "models/piper/en_US-ljspeech-medium",
+        "translator": "models/opus-mt-en-es-ct2-int8",
+        "voice": "models/piper/es_MX-claude-high"
+      },
+      "parts_bytes": {
+        "asr": 79829394,
+        "matcher": 23524150,
+        "guest_voice": 63536868,
+        "translator": 82473955,
+        "voice": 63127519,
+        "espeak-ng-data": 19085297
+      },
+      "shared_bytes": 166890412,
+      "bytes": 331577183,
+      "mb": 331.6,
+      "within_budget": true,
+      "headroom_mb": 68.4
+    },
+    "sw": {
+      "parts": {
+        "asr": "models/whisper-base.en-ct2-int8",
+        "matcher": "models/all-MiniLM-L6-v2-onnx-int8",
+        "guest_voice": "models/piper/en_US-ljspeech-medium",
+        "translator": "models/opus-mt-en-sw-ct2-int8",
+        "voice": "models/piper/sw_CD-lanfrica-medium"
+      },
+      "parts_bytes": {
+        "asr": 79829394,
+        "matcher": 23524150,
+        "guest_voice": 63536868,
+        "translator": 79100790,
+        "voice": 63206514,
+        "espeak-ng-data": 19085297
+      },
+      "shared_bytes": 166890412,
+      "bytes": 328283013,
+      "mb": 328.3,
+      "within_budget": true,
+      "headroom_mb": 71.7
+    }
+  },
+  "dev_total_models_dir_bytes": 454799687,
+  "dev_total_models_dir_mb": 454.8,
   "outside_models_dir_bytes": {
     "piper-tts: espeak-ng-data (phonemizer data, used by both voices)": 19085297,
-    "piper-tts: tashkeel (Arabic diacritizer model, bundled, not used)": 4796334,
+    "piper-tts: tashkeel (Arabic diacritizer model, bundled, not used)": 4809149,
     "faster-whisper: assets (Silero VAD model, bundled, not used)": 1245151
   },
-  "total_including_used_package_data_bytes": 328283510,
-  "total_including_used_package_data_mb": 328.3,
+  "total_including_used_package_data_bytes": 473884984,
+  "total_including_used_package_data_mb": 473.9,
   "components": {
     "all-MiniLM-L6-v2-onnx-int8": {
       "bytes": 23524150,
@@ -32,6 +77,35 @@
         "all-MiniLM-L6-v2-onnx-int8/tokenizer.json": {
           "bytes": 466247,
           "sha256": "be50c3628f2bf5bb5e3a7f17b1f74611b2561a3a27eeab05e5aa30f411572037"
+        }
+      }
+    },
+    "opus-mt-en-es-ct2-int8": {
+      "bytes": 82473955,
+      "files": {
+        "opus-mt-en-es-ct2-int8/README.md": {
+          "bytes": 2401,
+          "sha256": "7831f4fa1eda04c91a5aa7b57006db58355c78337a552c5ff0252d0c049710d8"
+        },
+        "opus-mt-en-es-ct2-int8/config.json": {
+          "bytes": 223,
+          "sha256": "8f6496adfc930cbfecbe8281112197705c488fab47d34b4829b06d7f478909af"
+        },
+        "opus-mt-en-es-ct2-int8/model.bin": {
+          "bytes": 79567635,
+          "sha256": "30c5c2de08329c61860777fbe471e2dd413f64adbde543b2848b5ac3b5d6f865"
+        },
+        "opus-mt-en-es-ct2-int8/shared_vocabulary.json": {
+          "bytes": 1276136,
+          "sha256": "040e48c9d00734f48506e052695837720bd1f6aa01c70636cde83038362baf19"
+        },
+        "opus-mt-en-es-ct2-int8/source.spm": {
+          "bytes": 801636,
+          "sha256": "4dd547c24816a335e7b0b2e63376a8f1b3cbfc671eda5ab808dd44fdadaa8791"
+        },
+        "opus-mt-en-es-ct2-int8/target.spm": {
+          "bytes": 825924,
+          "sha256": "e236ee6d866b635c0142114f8647f39831f9d92534aa2aad75c942f6a78ad0e3"
         }
       }
     },
@@ -78,6 +152,23 @@
         "piper/en_US-ljspeech-medium/en_US-ljspeech-medium.onnx.json": {
           "bytes": 4972,
           "sha256": "141d612cc0a95ed7efc1ca936b845c2364967f2e9217c5dbfcf69fc4d6c65860"
+        }
+      }
+    },
+    "piper/es_MX-claude-high": {
+      "bytes": 63127519,
+      "files": {
+        "piper/es_MX-claude-high/MODEL_CARD": {
+          "bytes": 247,
+          "sha256": "f03da57c1e945f6d709b01e7699d26018e145570139de52ac7569aaa8962a174"
+        },
+        "piper/es_MX-claude-high/es_MX-claude-high.onnx": {
+          "bytes": 63122309,
+          "sha256": "3ef40a71ea63852cd8ab7e6fa7d2ecdcfa67a0b47c9c48e3f10e02ee02083ea0"
+        },
+        "piper/es_MX-claude-high/es_MX-claude-high.onnx.json": {
+          "bytes": 4963,
+          "sha256": "1afc81f703c0e4cb3b4d7c0dca096b8b54a98806807f0170cf5eb5557723c12d"
         }
       }
     },

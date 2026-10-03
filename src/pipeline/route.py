@@ -76,8 +76,9 @@ class Decision:
 
 def decide(ranking: list, threshold: float, trigger_hits=(), weak_floor=None,
            allow_unverified=False) -> Decision:
-    """allow_unverified (off by default) lets a written but unverified answer reach BANK;
-    the Speaker must be built with the same setting to speak it."""
+    """allow_unverified (off by default) lets an answer whose Noor-language side is
+    unverified reach BANK, if its English is verified; the Speaker must be built with the
+    same setting to speak it."""
     top = ranking[0] if ranking else None
     strong = top if top is not None and top.score >= threshold else None
 
@@ -107,7 +108,10 @@ def decide(ranking: list, threshold: float, trigger_hits=(), weak_floor=None,
             else f"commitment flag not set to false ({entry.commitment_flag!r})"
         return Decision(COMMITMENT, f"{flag}; reason {why}", top, entry.intent,
                         f"commitment.{why}")
-    if not (entry.answerable or (allow_unverified and entry.has_answers)):
+    # allow_unverified relaxes only Noor's language; the English that reaches the guest
+    # must be verified in every mode.
+    if not (entry.answerable
+            or (allow_unverified and entry.has_answers and entry.answer_en.verified)):
         return Decision(NO_MATCH, "matched entry has no verified answer (verified: false)",
                         top, entry.intent, "no_match")
     return Decision(BANK, f"score {top.score:.3f} >= threshold {threshold}, not a commitment, "

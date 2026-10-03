@@ -13,14 +13,15 @@ def new_visit_id() -> str:
     return uuid.uuid4().hex
 
 
-def append_exchange(path: Path, *, visit_id, raw_transcript_en, translated_sw,
+def append_exchange(path: Path, *, visit_id, noor_language, raw_transcript_en, translated_noor,
                     matched_entry_id, confidence, route, intent) -> dict:
     record = {
         "id": uuid.uuid4().hex,
         "timestamp": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "visit_id": visit_id,
+        "noor_language": noor_language,
         "raw_transcript_en": raw_transcript_en,
-        "translated_sw": translated_sw,
+        "translated_noor": translated_noor,
         "matched_entry_id": matched_entry_id,
         "confidence": None if confidence is None else round(confidence, 4),
         "route": route,

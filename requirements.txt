@@ -9,3 +9,6 @@ piper-tts==1.8.0
 sounddevice==0.5.6
 numpy==2.4.6
 PyYAML==6.0.3
+# Web UI (src/web). Not models; licences: FastAPI MIT, uvicorn BSD-3-Clause.
+fastapi==0.142.2
+uvicorn==0.54.0

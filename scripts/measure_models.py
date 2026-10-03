@@ -1,4 +1,9 @@
-"""Measure what is on disk in models/ against the 400 MB budget (CLAUDE.md rule 5).
+"""Measure the models against the 400 MB budget (CLAUDE.md rule 5).
+
+The budget is per language stack: a phone ships one Noor language, so the number that
+must fit is that language's stack (the shared English models, its translator and
+voice, and the phonemizer data the voices need). We also report the dev total, all of
+models/ on this laptop with every language.
 
 Writes results/model_budget.json. Every size quoted anywhere in this repo comes from
 that file. Sizes are file byte counts (what gets copied to a phone), not estimates.
@@ -74,14 +79,40 @@ def main():
             dir_bytes(fw_dir / "assets")
     used_outside = sum(v for k, v in outside.items() if "not used" not in k)
 
+    # Per-language shipped stacks, from config/language.yaml.
+    import yaml
+    cfg = yaml.safe_load((ROOT / "config" / "language.yaml").read_text())
+    espeak = outside.get("piper-tts: espeak-ng-data (phonemizer data, used by both voices)", 0)
+
+    def model_dir(path):
+        p = ROOT / path
+        return p if p.is_dir() else p.parent
+
+    shared = {k: model_dir(v) for k, v in cfg["shared"].items()}
+    stacks = {}
+    for code, lang in cfg["languages"].items():
+        parts = dict(shared, translator=model_dir(lang["translator"]), voice=model_dir(lang["voice"]))
+        part_bytes = {k: dir_bytes(v) for k, v in parts.items()}
+        part_bytes["espeak-ng-data"] = espeak
+        total_stack = sum(part_bytes.values())
+        stacks[code] = {
+            "parts": {k: str(v.relative_to(ROOT)) for k, v in parts.items()},
+            "parts_bytes": part_bytes,
+            "shared_bytes": sum(part_bytes[k] for k in shared),
+            "bytes": total_stack,
+            "mb": round(total_stack / 10**6, 1),
+            "within_budget": total_stack <= BUDGET_BYTES,
+            "headroom_mb": round((BUDGET_BYTES - total_stack) / 10**6, 1),
+        }
+
     result = {
         "measured_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "machine": platform.machine(),
         "budget_bytes": BUDGET_BYTES,
-        "models_dir_total_bytes": total,
-        "models_dir_total_mb": round(total / 10**6, 1),
-        "models_dir_within_budget": total <= BUDGET_BYTES,
-        "models_dir_headroom_mb": round((BUDGET_BYTES - total) / 10**6, 1),
+        "budget_applies_to": "each shipped language stack (CLAUDE.md rule 5)",
+        "stacks": stacks,
+        "dev_total_models_dir_bytes": total,
+        "dev_total_models_dir_mb": round(total / 10**6, 1),
         "outside_models_dir_bytes": outside,
         "total_including_used_package_data_bytes": total + used_outside,
         "total_including_used_package_data_mb": round((total + used_outside) / 10**6, 1),
@@ -95,11 +126,12 @@ def main():
         print(f"{c['bytes'] / 10**6:8.1f} MB  {name}")
     if loose_bytes:
         print(f"{loose_bytes / 10**6:8.1f} MB  (loose files)")
-    print(f"{total / 10**6:8.1f} MB  TOTAL models/   budget {BUDGET_BYTES / 10**6:.0f} MB"
-          f"   {'within' if total <= BUDGET_BYTES else 'OVER'}")
     for k, v in outside.items():
         print(f"{v / 10**6:8.1f} MB  [outside models/] {k}")
-    print(f"{(total + used_outside) / 10**6:8.1f} MB  TOTAL incl. package data the runtime uses")
+    print(f"{total / 10**6:8.1f} MB  dev total, all of models/ (every language; not what ships)")
+    for code, st in stacks.items():
+        print(f"{st['mb']:8.1f} MB  shipped stack '{code}' incl. espeak-ng data   budget "
+              f"{BUDGET_BYTES / 10**6:.0f} MB   {'within' if st['within_budget'] else 'OVER'}")
     print(f"wrote {OUT.relative_to(ROOT)}")
 
 

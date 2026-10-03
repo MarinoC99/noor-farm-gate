@@ -1,14 +1,22 @@
 # guest_bank.yaml
 #
-# 50 entries, 200 guest paraphrases. Drawn from the Ondera scenario in the concept
-# note: 2 hectares, coffee on the upper slope, maize and beans below, eleven years in
-# the Ondera Coffee Cooperative, six or seven visitors a month by word of mouth.
+# What guests ask, drawn from the Ondera scenario in the concept note: 2 hectares,
+# coffee on the upper slope, maize and beans below, eleven years in the Ondera Coffee
+# Cooperative, six or seven visitors a month by word of mouth.
 #
 # HOW TO FILL THIS IN
-# answer_en  — what Noor would say, in her words. Write it as she'd say it, not as a
-#              brochure would. Short. One or two sentences.
-# answer_sw  — the Swahili she hears read back to her before she taps. This is her
-#              check that the English is right, so it must match in meaning.
+# answer_en  — what Noor would say, in her words, spoken to the guest. Short.
+# answer_es  — Spanish, Noor's language: what she hears read back before she taps.
+#              It is her check that the English is right, so it must match in meaning.
+# answer_sw  — Swahili, kept as the documented hard case. Machine-translated; nobody
+#              who speaks Swahili has reviewed it.
+#
+# verified   — one flag per language, set only by a person who speaks it and has read
+#              the line: {en: ..., es: ..., sw: ...}. An answer is spoken only if both
+#              en and Noor's active language are true. --allow-unverified can lift the
+#              Noor-language check for comparison; it never lifts en, because en is
+#              what reaches the guest. The ten en: true entries carry over the English
+#              answers you verified on 3 October.
 #
 # commitment: true means the tool NEVER answers it, however well it matches. It stops
 # and hands to Noor. Dates, money, anything the guest might act on, anything about
@@ -31,7 +39,8 @@ entries:
       - "is there a fee to look around"
     answer_en: TODO(human)
     answer_sw: TODO(human)
-    verified: false
+    answer_es: TODO(human)
+    verified: {en: false, sw: false, es: false}
 
   - id: price_coffee
     intent: money
@@ -43,7 +52,8 @@ entries:
       - "how much is a kilo of beans"
     answer_en: TODO(human)
     answer_sw: TODO(human)
-    verified: false
+    answer_es: TODO(human)
+    verified: {en: false, sw: false, es: false}
 
   - id: payment_methods
     intent: money
@@ -55,7 +65,8 @@ entries:
       - "can I pay with my phone"
     answer_en: TODO(human)
     answer_sw: TODO(human)
-    verified: false
+    answer_es: TODO(human)
+    verified: {en: false, sw: false, es: false}
 
   - id: group_price
     intent: money
@@ -67,7 +78,8 @@ entries:
       - "is there a family price"
     answer_en: TODO(human)
     answer_sw: TODO(human)
-    verified: false
+    answer_es: TODO(human)
+    verified: {en: false, sw: false, es: false}
 
   - id: tipping
     intent: money
@@ -79,7 +91,8 @@ entries:
       - "do people usually tip here"
     answer_en: TODO(human)
     answer_sw: TODO(human)
-    verified: false
+    answer_es: TODO(human)
+    verified: {en: false, sw: false, es: false}
 
   - id: whats_included
     intent: money
@@ -91,7 +104,8 @@ entries:
       - "what do we get for that"
     answer_en: TODO(human)
     answer_sw: TODO(human)
-    verified: false
+    answer_es: TODO(human)
+    verified: {en: false, sw: false, es: false}
 
   # ---------- TIME AND BOOKING — all commitments ----------
 
@@ -105,7 +119,8 @@ entries:
       - "how long are we walking for"
     answer_en: TODO(human)
     answer_sw: TODO(human)
-    verified: false
+    answer_es: TODO(human)
+    verified: {en: false, sw: false, es: false}
 
   - id: tour_now
     intent: logistics
@@ -117,7 +132,8 @@ entries:
       - "is now a bad time"
     answer_en: TODO(human)
     answer_sw: TODO(human)
-    verified: false
+    answer_es: TODO(human)
+    verified: {en: false, sw: false, es: false}
 
   - id: which_days
     intent: logistics
@@ -129,7 +145,8 @@ entries:
       - "do you do this every day"
     answer_en: TODO(human)
     answer_sw: TODO(human)
-    verified: false
+    answer_es: TODO(human)
+    verified: {en: false, sw: false, es: false}
 
   - id: booking_needed
     intent: logistics
@@ -141,7 +158,8 @@ entries:
       - "do you need notice"
     answer_en: TODO(human)
     answer_sw: TODO(human)
-    verified: false
+    answer_es: TODO(human)
+    verified: {en: false, sw: false, es: false}
 
   - id: come_back_later
     intent: logistics
@@ -153,7 +171,8 @@ entries:
       - "are you here next week"
     answer_en: TODO(human)
     answer_sw: TODO(human)
-    verified: false
+    answer_es: TODO(human)
+    verified: {en: false, sw: false, es: false}
 
   # ---------- THE COFFEE: GROWING ----------
 
@@ -167,7 +186,8 @@ entries:
       - "which type of coffee plant is it"
     answer_en: "It's arabica. The old variety my father planted, and some newer trees on the upper rows."
     answer_sw: "Ni arabika. Aina ya zamani aliyopanda baba yangu, na miti mingine mipya kwenye safu za juu."
-    verified: false         # Swahili machine-translated; not reviewed by a Swahili speaker
+    answer_es: TODO(human)
+    verified: {en: true, sw: false, es: false}
 
   - id: altitude
     intent: general
@@ -179,7 +199,8 @@ entries:
       - "does the height change the coffee"
     answer_en: "About 1,700 metres here. The coffee likes it — up this high the cherries ripen slowly and the taste is better for it."
     answer_sw: "Hapa ni kama mita elfu moja mia saba. Kahawa inapenda hivyo. Juu hivi, matunda ya kahawa huiva polepole na ladha huwa nzuri zaidi."
-    verified: false         # Swahili machine-translated; not reviewed by a Swahili speaker
+    answer_es: TODO(human)
+    verified: {en: true, sw: false, es: false}
 
   - id: harvest_time
     intent: general
@@ -191,7 +212,8 @@ entries:
       - "when is the picking done"
     answer_en: TODO(human)
     answer_sw: TODO(human)
-    verified: false
+    answer_es: TODO(human)
+    verified: {en: false, sw: false, es: false}
 
   - id: tree_maturity
     intent: general
@@ -203,7 +225,8 @@ entries:
       - "when did you plant these"
     answer_en: TODO(human)
     answer_sw: TODO(human)
-    verified: false
+    answer_es: TODO(human)
+    verified: {en: false, sw: false, es: false}
 
   - id: how_much_produced
     intent: general
@@ -215,7 +238,8 @@ entries:
       - "is this a good year"
     answer_en: TODO(human)
     answer_sw: TODO(human)
-    verified: false
+    answer_es: TODO(human)
+    verified: {en: false, sw: false, es: false}
 
   - id: picking_by_hand
     intent: general
@@ -227,7 +251,8 @@ entries:
       - "who does the picking"
     answer_en: TODO(human)
     answer_sw: TODO(human)
-    verified: false
+    answer_es: TODO(human)
+    verified: {en: false, sw: false, es: false}
 
   - id: shade_grown
     intent: general
@@ -239,7 +264,8 @@ entries:
       - "what are those big trees for"
     answer_en: TODO(human)
     answer_sw: TODO(human)
-    verified: false
+    answer_es: TODO(human)
+    verified: {en: false, sw: false, es: false}
 
   # ---------- THE COFFEE: PROCESSING ----------
 
@@ -253,7 +279,8 @@ entries:
       - "do you ferment it"
     answer_en: "We pulp the cherries the same day they're picked, then ferment them overnight, wash them, and dry them on the beds over there."
     answer_sw: "Tunaimenya siku ileile tunapoichuma. Kisha inachachuka usiku mzima, tunaiosha, na kuikausha kwenye vitanda vile pale."
-    verified: false         # Swahili machine-translated; not reviewed by a Swahili speaker
+    answer_es: TODO(human)
+    verified: {en: true, sw: false, es: false}
 
   - id: drying
     intent: general
@@ -265,7 +292,8 @@ entries:
       - "what happens if it rains"
     answer_en: TODO(human)
     answer_sw: TODO(human)
-    verified: false
+    answer_es: TODO(human)
+    verified: {en: false, sw: false, es: false}
 
   - id: roasting_here
     intent: general
@@ -277,7 +305,8 @@ entries:
       - "can we see it roasted"
     answer_en: TODO(human)
     answer_sw: TODO(human)
-    verified: false
+    answer_es: TODO(human)
+    verified: {en: false, sw: false, es: false}
 
   - id: taste_profile
     intent: general
@@ -289,7 +318,8 @@ entries:
       - "is it fruity or nutty"
     answer_en: TODO(human)
     answer_sw: TODO(human)
-    verified: false
+    answer_es: TODO(human)
+    verified: {en: false, sw: false, es: false}
 
   - id: tasting
     intent: general
@@ -301,7 +331,8 @@ entries:
       - "can you make us a cup"
     answer_en: TODO(human)
     answer_sw: TODO(human)
-    verified: false
+    answer_es: TODO(human)
+    verified: {en: false, sw: false, es: false}
 
   - id: brewing_method
     intent: general
@@ -313,7 +344,8 @@ entries:
       - "how should I make it"
     answer_en: TODO(human)
     answer_sw: TODO(human)
-    verified: false
+    answer_es: TODO(human)
+    verified: {en: false, sw: false, es: false}
 
   # ---------- BUYING ----------
 
@@ -327,7 +359,8 @@ entries:
       - "is any for sale"
     answer_en: TODO(human)
     answer_sw: TODO(human)
-    verified: false
+    answer_es: TODO(human)
+    verified: {en: false, sw: false, es: false}
 
   - id: shipping
     intent: logistics
@@ -339,7 +372,8 @@ entries:
       - "how would I order again"
     answer_en: TODO(human)
     answer_sw: TODO(human)
-    verified: false
+    answer_es: TODO(human)
+    verified: {en: false, sw: false, es: false}
 
   - id: how_much_available
     intent: money
@@ -351,7 +385,8 @@ entries:
       - "how much do you have left"
     answer_en: TODO(human)
     answer_sw: TODO(human)
-    verified: false
+    answer_es: TODO(human)
+    verified: {en: false, sw: false, es: false}
 
   - id: ground_or_whole
     intent: general
@@ -363,7 +398,8 @@ entries:
       - "will it fit in my luggage"
     answer_en: TODO(human)
     answer_sw: TODO(human)
-    verified: false
+    answer_es: TODO(human)
+    verified: {en: false, sw: false, es: false}
 
   # ---------- THE FARM ----------
 
@@ -377,7 +413,8 @@ entries:
       - "is all of this yours"
     answer_en: "Two hectares. Coffee on the slope above us, and the maize and beans below."
     answer_sw: "Hekta mbili. Kahawa iko kwenye mteremko juu yetu, na mahindi na maharagwe yako chini."
-    verified: false         # Swahili machine-translated; not reviewed by a Swahili speaker
+    answer_es: TODO(human)
+    verified: {en: true, sw: false, es: false}
 
   - id: other_crops
     intent: general
@@ -389,7 +426,8 @@ entries:
       - "what are those other plants"
     answer_en: "Maize and beans on the lower part, below the coffee. That's what we eat. The coffee is what we sell."
     answer_sw: "Mahindi na maharagwe yako chini, chini ya kahawa. Hayo ndiyo tunayokula. Kahawa ndiyo tunayouza."
-    verified: false         # Swahili machine-translated; not reviewed by a Swahili speaker
+    answer_es: TODO(human)
+    verified: {en: true, sw: false, es: false}
 
   - id: animals
     intent: general
@@ -401,7 +439,8 @@ entries:
       - "whose goats are those"
     answer_en: TODO(human)
     answer_sw: TODO(human)
-    verified: false
+    answer_es: TODO(human)
+    verified: {en: false, sw: false, es: false}
 
   - id: who_works_here
     intent: general
@@ -413,7 +452,8 @@ entries:
       - "how many people work here"
     answer_en: TODO(human)
     answer_sw: TODO(human)
-    verified: false
+    answer_es: TODO(human)
+    verified: {en: false, sw: false, es: false}
 
   - id: chemicals
     intent: general
@@ -425,7 +465,8 @@ entries:
       - "what fertiliser do you use"
     answer_en: TODO(human)
     answer_sw: TODO(human)
-    verified: false
+    answer_es: TODO(human)
+    verified: {en: false, sw: false, es: false}
 
   - id: water_source
     intent: general
@@ -437,7 +478,8 @@ entries:
       - "what happens in a dry year"
     answer_en: TODO(human)
     answer_sw: TODO(human)
-    verified: false
+    answer_es: TODO(human)
+    verified: {en: false, sw: false, es: false}
 
   - id: climate_change
     intent: general
@@ -449,7 +491,8 @@ entries:
       - "is it getting harder to grow"
     answer_en: TODO(human)
     answer_sw: TODO(human)
-    verified: false
+    answer_es: TODO(human)
+    verified: {en: false, sw: false, es: false}
 
   # ---------- NOOR AND THE COOPERATIVE ----------
 
@@ -463,7 +506,8 @@ entries:
       - "was this your parents' land"
     answer_en: "All my life. This was my parents' land before it was mine."
     answer_sw: "Maisha yangu yote. Hili lilikuwa shamba la wazazi wangu kabla ya kuwa langu."
-    verified: false         # Swahili machine-translated; not reviewed by a Swahili speaker
+    answer_es: TODO(human)
+    verified: {en: true, sw: false, es: false}
 
   - id: cooperative
     intent: general
@@ -475,7 +519,8 @@ entries:
       - "how long have you been a member"
     answer_en: "Yes, the Ondera Coffee Cooperative. Eleven years now. They collect the parchment from us after harvest."
     answer_sw: "Ndiyo, Chama cha Ushirika cha Kahawa cha Ondera. Miaka kumi na mmoja sasa. Wanachukua kahawa ya maganda kutoka kwetu baada ya mavuno."
-    verified: false         # Swahili machine-translated; not reviewed by a Swahili speaker
+    answer_es: TODO(human)
+    verified: {en: true, sw: false, es: false}
 
   - id: where_coffee_goes
     intent: general
@@ -487,7 +532,8 @@ entries:
       - "who do you sell to"
     answer_en: TODO(human)
     answer_sw: TODO(human)
-    verified: false
+    answer_es: TODO(human)
+    verified: {en: false, sw: false, es: false}
 
   - id: family
     intent: general
@@ -499,7 +545,8 @@ entries:
       - "will your children farm too"
     answer_en: TODO(human)
     answer_sw: TODO(human)
-    verified: false
+    answer_es: TODO(human)
+    verified: {en: false, sw: false, es: false}
 
   - id: fair_price
     intent: general
@@ -511,7 +558,8 @@ entries:
       - "is it a good living"
     answer_en: TODO(human)
     answer_sw: TODO(human)
-    verified: false
+    answer_es: TODO(human)
+    verified: {en: false, sw: false, es: false}
 
   - id: certification
     intent: general
@@ -523,7 +571,8 @@ entries:
       - "are you certified organic"
     answer_en: TODO(human)
     answer_sw: TODO(human)
-    verified: false
+    answer_es: TODO(human)
+    verified: {en: false, sw: false, es: false}
 
   # ---------- LOGISTICS ----------
 
@@ -537,7 +586,8 @@ entries:
       - "is the road passable"
     answer_en: "By the big tree at the bottom, where the track widens. The road above that gets bad after rain."
     answer_sw: "Pale chini kwenye mti mkubwa, njia inapopanuka. Juu ya hapo barabara huharibika baada ya mvua."
-    verified: false         # Swahili machine-translated; not reviewed by a Swahili speaker
+    answer_es: TODO(human)
+    verified: {en: true, sw: false, es: false}
 
   - id: walking_difficulty
     intent: logistics
@@ -549,7 +599,8 @@ entries:
       - "is it muddy up there"
     answer_en: TODO(human)
     answer_sw: TODO(human)
-    verified: false
+    answer_es: TODO(human)
+    verified: {en: false, sw: false, es: false}
 
   - id: what_to_wear
     intent: logistics
@@ -561,7 +612,8 @@ entries:
       - "will I get dirty"
     answer_en: TODO(human)
     answer_sw: TODO(human)
-    verified: false
+    answer_es: TODO(human)
+    verified: {en: false, sw: false, es: false}
 
   - id: toilet
     intent: logistics
@@ -573,7 +625,8 @@ entries:
       - "is there somewhere to wash my hands"
     answer_en: "Yes, behind the house. There's water by the door to wash your hands."
     answer_sw: "Ndiyo, choo kiko nyuma ya nyumba. Kuna maji mlangoni, unawe mikono."
-    verified: false         # Swahili machine-translated; not reviewed by a Swahili speaker
+    answer_es: TODO(human)
+    verified: {en: true, sw: false, es: false}
 
   - id: shelter_or_seating
     intent: logistics
@@ -585,7 +638,8 @@ entries:
       - "where do we wait"
     answer_en: TODO(human)
     answer_sw: TODO(human)
-    verified: false
+    answer_es: TODO(human)
+    verified: {en: false, sw: false, es: false}
 
   # ---------- SAFETY — all commitments ----------
 
@@ -599,7 +653,8 @@ entries:
       - "will the kids be bored"
     answer_en: TODO(human)
     answer_sw: TODO(human)
-    verified: false
+    answer_es: TODO(human)
+    verified: {en: false, sw: false, es: false}
 
   - id: mobility
     intent: safety
@@ -611,7 +666,8 @@ entries:
       - "can an older person do this"
     answer_en: TODO(human)
     answer_sw: TODO(human)
-    verified: false
+    answer_es: TODO(human)
+    verified: {en: false, sw: false, es: false}
 
   - id: snakes_and_animals
     intent: safety
@@ -623,7 +679,8 @@ entries:
       - "are there biting ants"
     answer_en: TODO(human)
     answer_sw: TODO(human)
-    verified: false
+    answer_es: TODO(human)
+    verified: {en: false, sw: false, es: false}
 
   - id: drinking_water
     intent: safety
@@ -635,7 +692,8 @@ entries:
       - "is the water boiled"
     answer_en: TODO(human)
     answer_sw: TODO(human)
-    verified: false
+    answer_es: TODO(human)
+    verified: {en: false, sw: false, es: false}
 
   - id: allergies
     intent: safety
@@ -647,7 +705,8 @@ entries:
       - "is there anything I should avoid"
     answer_en: TODO(human)
     answer_sw: TODO(human)
-    verified: false
+    answer_es: TODO(human)
+    verified: {en: false, sw: false, es: false}
 
   # ---------- PHOTOS AND MEDIA ----------
 
@@ -661,7 +720,8 @@ entries:
       - "do you mind the camera"
     answer_en: "Take as many as you like. Ask me first if you want a photo of me."
     answer_sw: "Piga picha nyingi unavyotaka. Ukitaka kunipiga picha mimi, niulize kwanza."
-    verified: false         # Swahili machine-translated; not reviewed by a Swahili speaker
+    answer_es: TODO(human)
+    verified: {en: true, sw: false, es: false}
 
   - id: social_media
     intent: general
@@ -673,7 +733,8 @@ entries:
       - "do you have a website"
     answer_en: TODO(human)
     answer_sw: TODO(human)
-    verified: false
+    answer_es: TODO(human)
+    verified: {en: false, sw: false, es: false}
 
   # ---------- THINGS SHE MAY NOT OFFER — keep these ----------
 
@@ -687,7 +748,8 @@ entries:
       - "do you serve meals"
     answer_en: TODO(human)
     answer_sw: TODO(human)
-    verified: false
+    answer_es: TODO(human)
+    verified: {en: false, sw: false, es: false}
 
   - id: accommodation                            # GAP
     intent: logistics
@@ -699,7 +761,8 @@ entries:
       - "could we camp here"
     answer_en: TODO(human)
     answer_sw: TODO(human)
-    verified: false
+    answer_es: TODO(human)
+    verified: {en: false, sw: false, es: false}
 
   - id: transport_back                           # GAP
     intent: logistics
@@ -711,7 +774,8 @@ entries:
       - "can someone drive us"
     answer_en: TODO(human)
     answer_sw: TODO(human)
-    verified: false
+    answer_es: TODO(human)
+    verified: {en: false, sw: false, es: false}
 
   - id: other_things_nearby
     intent: general
@@ -723,4 +787,5 @@ entries:
       - "is there a market nearby"
     answer_en: TODO(human)
     answer_sw: TODO(human)
-    verified: false
+    answer_es: TODO(human)
+    verified: {en: false, sw: false, es: false}

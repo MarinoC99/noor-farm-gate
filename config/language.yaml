@@ -1,0 +1,22 @@
+# Which language Noor hears. This one setting selects the English -> Noor translation
+# model, Noor's voice, and which fields of guest_bank.yaml (answer_<code>) and
+# stop_phrases.yaml (<code>) are active. Override for one run with --language.
+noor_language: es
+
+languages:
+  es:
+    name: Español            # shown on Noor's side of the screen
+    name_en: Spanish
+    translator: models/opus-mt-en-es-ct2-int8
+    voice: models/piper/es_MX-claude-high/es_MX-claude-high.onnx
+  sw:
+    name: Kiswahili
+    name_en: Swahili
+    translator: models/opus-mt-en-sw-ct2-int8
+    voice: models/piper/sw_CD-lanfrica-medium/sw_CD-lanfrica-medium.onnx
+
+# Shared by every language: the guest always speaks and hears English.
+shared:
+  asr: models/whisper-base.en-ct2-int8
+  matcher: models/all-MiniLM-L6-v2-onnx-int8
+  guest_voice: models/piper/en_US-ljspeech-medium/en_US-ljspeech-medium.onnx

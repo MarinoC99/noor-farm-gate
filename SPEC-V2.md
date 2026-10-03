@@ -1,5 +1,9 @@
 # Noor's farm gate — build spec
 
+> **Language note, 3 October.** Noor's language is now Spanish, set in
+> `config/language.yaml`; Swahili remains as the documented hard case. Where this spec
+> says Swahili for Noor's side, read "Noor's language". See `DECISIONS.md`.
+
 ## What it is
 
 A phone that does the local guide's job at the farm gate.
@@ -17,9 +21,10 @@ can act on.
 
 ## The central property
 
-**Every sentence this tool speaks, in either direction, was written by a human in
-advance.** No generation anywhere. No thresholds that let unverified text through. No
-exceptions.
+**Every sentence that reaches a guest was written and verified by a human in
+advance.** No generated text goes outward. No thresholds that let unverified text
+through. One exception, inward only: the guest's own question, machine-translated, is
+spoken to Noor alone, in front of the guest who asked it.
 
 This is possible because the question space at a farm gate is genuinely closed. What
 grows here, how long is the tour, what does it cost, can I buy beans, where do I
@@ -161,7 +166,7 @@ Do not start this.
 ## Data model
 
 ```
-Exchange: id, timestamp, raw_transcript_en, translated_sw,
+Exchange: id, timestamp, noor_language, raw_transcript_en, translated_noor,
           matched_entry_id (nullable), confidence, route, intent
 route: BANK | NOOR_BANK | WEAK_MATCH | NO_MATCH | COMMITMENT
 Visit:    groups exchanges by session
