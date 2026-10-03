@@ -1,0 +1,726 @@
+# guest_bank.yaml
+#
+# 50 entries, 200 guest paraphrases. Drawn from the Ondera scenario in the concept
+# note: 2 hectares, coffee on the upper slope, maize and beans below, eleven years in
+# the Ondera Coffee Cooperative, six or seven visitors a month by word of mouth.
+#
+# HOW TO FILL THIS IN
+# answer_en  — what Noor would say, in her words. Write it as she'd say it, not as a
+#              brochure would. Short. One or two sentences.
+# answer_sw  — the Swahili she hears read back to her before she taps. This is her
+#              check that the English is right, so it must match in meaning.
+#
+# commitment: true means the tool NEVER answers it, however well it matches. It stops
+# and hands to Noor. Dates, money, anything the guest might act on, anything about
+# safety or allergies.
+#
+# Entries marked GAP are things she probably does NOT offer. Keep them. A question
+# with no good answer is the most useful record the summary screen can show her.
+
+entries:
+
+  # ---------- MONEY — all commitments ----------
+
+  - id: price_tour
+    intent: money
+    commitment: true
+    paraphrases_en:
+      - "how much is the tour"
+      - "what does it cost to visit"
+      - "what do you charge for a tour"
+      - "is there a fee to look around"
+    answer_en: TODO(human)
+    answer_sw: TODO(human)
+    verified: false
+
+  - id: price_coffee
+    intent: money
+    commitment: true
+    paraphrases_en:
+      - "how much for a bag of coffee"
+      - "what does the coffee cost"
+      - "price per kilo"
+      - "how much is a kilo of beans"
+    answer_en: TODO(human)
+    answer_sw: TODO(human)
+    verified: false
+
+  - id: payment_methods
+    intent: money
+    commitment: true
+    paraphrases_en:
+      - "can I pay by card"
+      - "do you take mobile money"
+      - "do you only take cash"
+      - "can I pay with my phone"
+    answer_en: TODO(human)
+    answer_sw: TODO(human)
+    verified: false
+
+  - id: group_price
+    intent: money
+    commitment: true
+    paraphrases_en:
+      - "is it cheaper for a group"
+      - "do you do a group rate"
+      - "how much for four people"
+      - "is there a family price"
+    answer_en: TODO(human)
+    answer_sw: TODO(human)
+    verified: false
+
+  - id: tipping
+    intent: money
+    commitment: true
+    paraphrases_en:
+      - "should I tip"
+      - "is a tip expected"
+      - "can I give you something extra"
+      - "do people usually tip here"
+    answer_en: TODO(human)
+    answer_sw: TODO(human)
+    verified: false
+
+  - id: whats_included
+    intent: money
+    commitment: true
+    paraphrases_en:
+      - "what's included in the price"
+      - "does that include the tasting"
+      - "is the coffee included"
+      - "what do we get for that"
+    answer_en: TODO(human)
+    answer_sw: TODO(human)
+    verified: false
+
+  # ---------- TIME AND BOOKING — all commitments ----------
+
+  - id: tour_duration
+    intent: logistics
+    commitment: true
+    paraphrases_en:
+      - "how long does the tour take"
+      - "how much time do we need"
+      - "will this take all morning"
+      - "how long are we walking for"
+    answer_en: TODO(human)
+    answer_sw: TODO(human)
+    verified: false
+
+  - id: tour_now
+    intent: logistics
+    commitment: true
+    paraphrases_en:
+      - "can we do the tour now"
+      - "are you free at the moment"
+      - "can you show us around today"
+      - "is now a bad time"
+    answer_en: TODO(human)
+    answer_sw: TODO(human)
+    verified: false
+
+  - id: which_days
+    intent: logistics
+    commitment: true
+    paraphrases_en:
+      - "which days do you do tours"
+      - "are you open on Sunday"
+      - "when can we come"
+      - "do you do this every day"
+    answer_en: TODO(human)
+    answer_sw: TODO(human)
+    verified: false
+
+  - id: booking_needed
+    intent: logistics
+    commitment: true
+    paraphrases_en:
+      - "do we need to book"
+      - "can we just turn up"
+      - "should we have called first"
+      - "do you need notice"
+    answer_en: TODO(human)
+    answer_sw: TODO(human)
+    verified: false
+
+  - id: come_back_later
+    intent: logistics
+    commitment: true
+    paraphrases_en:
+      - "can we come back tomorrow"
+      - "would another day be better"
+      - "when should we come back"
+      - "are you here next week"
+    answer_en: TODO(human)
+    answer_sw: TODO(human)
+    verified: false
+
+  # ---------- THE COFFEE: GROWING ----------
+
+  - id: coffee_variety
+    intent: general
+    commitment: false
+    paraphrases_en:
+      - "what kind of coffee is this"
+      - "is this arabica"
+      - "what variety do you grow"
+      - "which type of coffee plant is it"
+    answer_en: "It's arabica. The old variety my father planted, and some newer trees on the upper rows."
+    answer_sw: "Ni arabika. Aina ya zamani aliyopanda baba yangu, na miti mingine mipya kwenye safu za juu."
+    verified: true          # checked by a Swahili speaker, 3 Oct
+
+  - id: altitude
+    intent: general
+    commitment: false
+    paraphrases_en:
+      - "how high are we here"
+      - "what's the altitude"
+      - "how many metres above sea level"
+      - "does the height change the coffee"
+    answer_en: "About 1,700 metres here. The coffee likes it — up this high the cherries ripen slowly and the taste is better for it."
+    answer_sw: "Hapa ni kama mita elfu moja mia saba. Kahawa inapenda hivyo. Juu hivi, matunda ya kahawa huiva polepole na ladha huwa nzuri zaidi."
+    verified: true          # checked by a Swahili speaker, 3 Oct
+
+  - id: harvest_time
+    intent: general
+    commitment: false
+    paraphrases_en:
+      - "when do you pick the coffee"
+      - "what month is harvest"
+      - "is it harvest season now"
+      - "when is the picking done"
+    answer_en: TODO(human)
+    answer_sw: TODO(human)
+    verified: false
+
+  - id: tree_maturity
+    intent: general
+    commitment: false
+    paraphrases_en:
+      - "how long until a tree makes coffee"
+      - "how old are these plants"
+      - "how many years before it produces"
+      - "when did you plant these"
+    answer_en: TODO(human)
+    answer_sw: TODO(human)
+    verified: false
+
+  - id: how_much_produced
+    intent: general
+    commitment: false
+    paraphrases_en:
+      - "how much coffee do you make a year"
+      - "what's your harvest like"
+      - "how many bags do you get"
+      - "is this a good year"
+    answer_en: TODO(human)
+    answer_sw: TODO(human)
+    verified: false
+
+  - id: picking_by_hand
+    intent: general
+    commitment: false
+    paraphrases_en:
+      - "do you pick by hand"
+      - "is it all picked manually"
+      - "do you use machines"
+      - "who does the picking"
+    answer_en: TODO(human)
+    answer_sw: TODO(human)
+    verified: false
+
+  - id: shade_grown
+    intent: general
+    commitment: false
+    paraphrases_en:
+      - "do the trees need shade"
+      - "why are there other trees here"
+      - "is this shade grown"
+      - "what are those big trees for"
+    answer_en: TODO(human)
+    answer_sw: TODO(human)
+    verified: false
+
+  # ---------- THE COFFEE: PROCESSING ----------
+
+  - id: processing_method
+    intent: general
+    commitment: false
+    paraphrases_en:
+      - "is this washed or natural"
+      - "how do you process the cherries"
+      - "what happens after picking"
+      - "do you ferment it"
+    answer_en: "We pulp the cherries the same day they're picked, then ferment them overnight, wash them, and dry them on the beds over there."
+    answer_sw: "Tunaimenya siku ileile tunapoichuma. Kisha inachachuka usiku mzima, tunaiosha, na kuikausha kwenye vitanda vile pale."
+    verified: true          # checked by a Swahili speaker, 3 Oct
+
+  - id: drying
+    intent: general
+    commitment: false
+    paraphrases_en:
+      - "how do you dry the beans"
+      - "are those drying beds"
+      - "how long does drying take"
+      - "what happens if it rains"
+    answer_en: TODO(human)
+    answer_sw: TODO(human)
+    verified: false
+
+  - id: roasting_here
+    intent: general
+    commitment: false
+    paraphrases_en:
+      - "do you roast the coffee here"
+      - "is it roasted on the farm"
+      - "where does the roasting happen"
+      - "can we see it roasted"
+    answer_en: TODO(human)
+    answer_sw: TODO(human)
+    verified: false
+
+  - id: taste_profile
+    intent: general
+    commitment: false
+    paraphrases_en:
+      - "what does your coffee taste like"
+      - "is it strong"
+      - "how would you describe the flavour"
+      - "is it fruity or nutty"
+    answer_en: TODO(human)
+    answer_sw: TODO(human)
+    verified: false
+
+  - id: tasting
+    intent: general
+    commitment: true
+    paraphrases_en:
+      - "can we taste the coffee"
+      - "do we get to try some"
+      - "is there a tasting"
+      - "can you make us a cup"
+    answer_en: TODO(human)
+    answer_sw: TODO(human)
+    verified: false
+
+  - id: brewing_method
+    intent: general
+    commitment: false
+    paraphrases_en:
+      - "how do you make your coffee at home"
+      - "what's the best way to brew this"
+      - "do you use a filter"
+      - "how should I make it"
+    answer_en: TODO(human)
+    answer_sw: TODO(human)
+    verified: false
+
+  # ---------- BUYING ----------
+
+  - id: buy_coffee
+    intent: money
+    commitment: true
+    paraphrases_en:
+      - "can I buy coffee from you"
+      - "do you sell beans here"
+      - "can we take some home"
+      - "is any for sale"
+    answer_en: TODO(human)
+    answer_sw: TODO(human)
+    verified: false
+
+  - id: shipping
+    intent: logistics
+    commitment: true
+    paraphrases_en:
+      - "can you post it to my country"
+      - "do you ship abroad"
+      - "can you send more later"
+      - "how would I order again"
+    answer_en: TODO(human)
+    answer_sw: TODO(human)
+    verified: false
+
+  - id: how_much_available
+    intent: money
+    commitment: true
+    paraphrases_en:
+      - "how much can I buy"
+      - "do you have enough for five bags"
+      - "is there a limit"
+      - "how much do you have left"
+    answer_en: TODO(human)
+    answer_sw: TODO(human)
+    verified: false
+
+  - id: ground_or_whole
+    intent: general
+    commitment: false
+    paraphrases_en:
+      - "is it ground or whole bean"
+      - "can you grind it for me"
+      - "do you sell it ground"
+      - "will it fit in my luggage"
+    answer_en: TODO(human)
+    answer_sw: TODO(human)
+    verified: false
+
+  # ---------- THE FARM ----------
+
+  - id: farm_size
+    intent: general
+    commitment: false
+    paraphrases_en:
+      - "how big is your farm"
+      - "how many hectares is this"
+      - "how far does your land go"
+      - "is all of this yours"
+    answer_en: "Two hectares. Coffee on the slope above us, and the maize and beans below."
+    answer_sw: "Hekta mbili. Kahawa iko kwenye mteremko juu yetu, na mahindi na maharagwe yako chini."
+    verified: true          # checked by a Swahili speaker, 3 Oct
+
+  - id: other_crops
+    intent: general
+    commitment: false
+    paraphrases_en:
+      - "what else do you grow"
+      - "is that maize down there"
+      - "do you grow food too"
+      - "what are those other plants"
+    answer_en: "Maize and beans on the lower part, below the coffee. That's what we eat. The coffee is what we sell."
+    answer_sw: "Mahindi na maharagwe yako chini, chini ya kahawa. Hayo ndiyo tunayokula. Kahawa ndiyo tunayouza."
+    verified: true          # checked by a Swahili speaker, 3 Oct
+
+  - id: animals
+    intent: general
+    commitment: false
+    paraphrases_en:
+      - "do you keep animals"
+      - "are there cows here"
+      - "do you have chickens"
+      - "whose goats are those"
+    answer_en: TODO(human)
+    answer_sw: TODO(human)
+    verified: false
+
+  - id: who_works_here
+    intent: general
+    commitment: false
+    paraphrases_en:
+      - "who works on the farm"
+      - "do you do all this yourself"
+      - "do you hire people at harvest"
+      - "how many people work here"
+    answer_en: TODO(human)
+    answer_sw: TODO(human)
+    verified: false
+
+  - id: chemicals
+    intent: general
+    commitment: false
+    paraphrases_en:
+      - "do you use pesticides"
+      - "is this organic"
+      - "do you spray the plants"
+      - "what fertiliser do you use"
+    answer_en: TODO(human)
+    answer_sw: TODO(human)
+    verified: false
+
+  - id: water_source
+    intent: general
+    commitment: false
+    paraphrases_en:
+      - "where does your water come from"
+      - "do you irrigate"
+      - "is there a river nearby"
+      - "what happens in a dry year"
+    answer_en: TODO(human)
+    answer_sw: TODO(human)
+    verified: false
+
+  - id: climate_change
+    intent: general
+    commitment: false
+    paraphrases_en:
+      - "has the weather changed over the years"
+      - "is climate change affecting you"
+      - "are the rains different now"
+      - "is it getting harder to grow"
+    answer_en: TODO(human)
+    answer_sw: TODO(human)
+    verified: false
+
+  # ---------- NOOR AND THE COOPERATIVE ----------
+
+  - id: how_long_farming
+    intent: general
+    commitment: false
+    paraphrases_en:
+      - "how long have you been farming"
+      - "did you grow up here"
+      - "how many years have you done this"
+      - "was this your parents' land"
+    answer_en: "All my life. This was my parents' land before it was mine."
+    answer_sw: "Maisha yangu yote. Hili lilikuwa shamba la wazazi wangu kabla ya kuwa langu."
+    verified: true          # checked by a Swahili speaker, 3 Oct
+
+  - id: cooperative
+    intent: general
+    commitment: false
+    paraphrases_en:
+      - "are you part of a cooperative"
+      - "do you sell on your own"
+      - "what does the cooperative do"
+      - "how long have you been a member"
+    answer_en: "Yes, the Ondera Coffee Cooperative. Eleven years now. They collect the parchment from us after harvest."
+    answer_sw: "Ndiyo, Chama cha Ushirika cha Kahawa cha Ondera. Miaka kumi na mmoja sasa. Wanachukua kahawa ya maganda kutoka kwetu baada ya mavuno."
+    verified: true          # checked by a Swahili speaker, 3 Oct
+
+  - id: where_coffee_goes
+    intent: general
+    commitment: false
+    paraphrases_en:
+      - "where does your coffee end up"
+      - "which countries buy it"
+      - "could I find this at home"
+      - "who do you sell to"
+    answer_en: TODO(human)
+    answer_sw: TODO(human)
+    verified: false
+
+  - id: family
+    intent: general
+    commitment: false
+    paraphrases_en:
+      - "do you have family here"
+      - "do your children help"
+      - "who else lives on the farm"
+      - "will your children farm too"
+    answer_en: TODO(human)
+    answer_sw: TODO(human)
+    verified: false
+
+  - id: fair_price
+    intent: general
+    commitment: false
+    paraphrases_en:
+      - "do you get a fair price"
+      - "how is the price decided"
+      - "do you know what buyers pay"
+      - "is it a good living"
+    answer_en: TODO(human)
+    answer_sw: TODO(human)
+    verified: false
+
+  - id: certification
+    intent: general
+    commitment: false
+    paraphrases_en:
+      - "is this fair trade certified"
+      - "do you have any certification"
+      - "is it rainforest alliance"
+      - "are you certified organic"
+    answer_en: TODO(human)
+    answer_sw: TODO(human)
+    verified: false
+
+  # ---------- LOGISTICS ----------
+
+  - id: parking
+    intent: logistics
+    commitment: false
+    paraphrases_en:
+      - "where can I park"
+      - "is it ok to leave the car there"
+      - "can we drive up"
+      - "is the road passable"
+    answer_en: "By the big tree at the bottom, where the track widens. The road above that gets bad after rain."
+    answer_sw: "Pale chini kwenye mti mkubwa, njia inapopanuka. Juu ya hapo barabara huharibika baada ya mvua."
+    verified: true          # checked by a Swahili speaker, 3 Oct
+
+  - id: walking_difficulty
+    intent: logistics
+    commitment: false
+    paraphrases_en:
+      - "is the walk steep"
+      - "how hard is the path"
+      - "how far do we walk"
+      - "is it muddy up there"
+    answer_en: TODO(human)
+    answer_sw: TODO(human)
+    verified: false
+
+  - id: what_to_wear
+    intent: logistics
+    commitment: false
+    paraphrases_en:
+      - "what shoes should I wear"
+      - "do I need boots"
+      - "should I bring a jacket"
+      - "will I get dirty"
+    answer_en: TODO(human)
+    answer_sw: TODO(human)
+    verified: false
+
+  - id: toilet
+    intent: logistics
+    commitment: false
+    paraphrases_en:
+      - "is there a toilet"
+      - "where's the bathroom"
+      - "can I use a toilet before we go"
+      - "is there somewhere to wash my hands"
+    answer_en: "Yes, behind the house. There's water by the door to wash your hands."
+    answer_sw: "Ndiyo, choo kiko nyuma ya nyumba. Kuna maji mlangoni, unawe mikono."
+    verified: true          # checked by a Swahili speaker, 3 Oct
+
+  - id: shelter_or_seating
+    intent: logistics
+    commitment: false
+    paraphrases_en:
+      - "is there somewhere to sit"
+      - "is there shade"
+      - "can we rest somewhere"
+      - "where do we wait"
+    answer_en: TODO(human)
+    answer_sw: TODO(human)
+    verified: false
+
+  # ---------- SAFETY — all commitments ----------
+
+  - id: children_welcome
+    intent: safety
+    commitment: true
+    paraphrases_en:
+      - "can I bring my children"
+      - "is this safe for a small child"
+      - "is it ok for a six year old"
+      - "will the kids be bored"
+    answer_en: TODO(human)
+    answer_sw: TODO(human)
+    verified: false
+
+  - id: mobility
+    intent: safety
+    commitment: true
+    paraphrases_en:
+      - "can my mother manage the walk"
+      - "is it suitable for someone with a bad knee"
+      - "is there a wheelchair route"
+      - "can an older person do this"
+    answer_en: TODO(human)
+    answer_sw: TODO(human)
+    verified: false
+
+  - id: snakes_and_animals
+    intent: safety
+    commitment: true
+    paraphrases_en:
+      - "are there snakes"
+      - "is there anything dangerous up there"
+      - "should I worry about insects"
+      - "are there biting ants"
+    answer_en: TODO(human)
+    answer_sw: TODO(human)
+    verified: false
+
+  - id: drinking_water
+    intent: safety
+    commitment: true
+    paraphrases_en:
+      - "is the water safe to drink"
+      - "can I drink from the tap"
+      - "should I bring my own water"
+      - "is the water boiled"
+    answer_en: TODO(human)
+    answer_sw: TODO(human)
+    verified: false
+
+  - id: allergies
+    intent: safety
+    commitment: true
+    paraphrases_en:
+      - "I'm allergic to nuts"
+      - "does anything here contain dairy"
+      - "I can't eat gluten"
+      - "is there anything I should avoid"
+    answer_en: TODO(human)
+    answer_sw: TODO(human)
+    verified: false
+
+  # ---------- PHOTOS AND MEDIA ----------
+
+  - id: photos
+    intent: general
+    commitment: false
+    paraphrases_en:
+      - "can I take photos"
+      - "is it ok to photograph you"
+      - "may I take a picture of this"
+      - "do you mind the camera"
+    answer_en: "Take as many as you like. Ask me first if you want a photo of me."
+    answer_sw: "Piga picha nyingi unavyotaka. Ukitaka kunipiga picha mimi, niulize kwanza."
+    verified: true          # checked by a Swahili speaker, 3 Oct
+
+  - id: social_media
+    intent: general
+    commitment: false
+    paraphrases_en:
+      - "can I post this online"
+      - "are you on instagram"
+      - "can I tag the farm"
+      - "do you have a website"
+    answer_en: TODO(human)
+    answer_sw: TODO(human)
+    verified: false
+
+  # ---------- THINGS SHE MAY NOT OFFER — keep these ----------
+
+  - id: lunch                                    # GAP
+    intent: logistics
+    commitment: true
+    paraphrases_en:
+      - "can we stay for lunch"
+      - "is there food here"
+      - "can we eat something"
+      - "do you serve meals"
+    answer_en: TODO(human)
+    answer_sw: TODO(human)
+    verified: false
+
+  - id: accommodation                            # GAP
+    intent: logistics
+    commitment: true
+    paraphrases_en:
+      - "can we stay the night"
+      - "do you have rooms"
+      - "is there a guesthouse nearby"
+      - "could we camp here"
+    answer_en: TODO(human)
+    answer_sw: TODO(human)
+    verified: false
+
+  - id: transport_back                           # GAP
+    intent: logistics
+    commitment: true
+    paraphrases_en:
+      - "how do we get back to town"
+      - "can you arrange a car"
+      - "is there a bus from here"
+      - "can someone drive us"
+    answer_en: TODO(human)
+    answer_sw: TODO(human)
+    verified: false
+
+  - id: other_things_nearby
+    intent: general
+    commitment: false
+    paraphrases_en:
+      - "what else is worth seeing around here"
+      - "are there other farms to visit"
+      - "what should we do next"
+      - "is there a market nearby"
+    answer_en: TODO(human)
+    answer_sw: TODO(human)
+    verified: false

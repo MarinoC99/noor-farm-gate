@@ -1,0 +1,53 @@
+{
+  "input": {
+    "wav": "b2_farm_size.wav",
+    "note": "synthetic speech: macOS say, default voice, text \"how big is your farm\""
+  },
+  "spoken": [
+    {
+      "source": "guest_question_sw",
+      "voice": "sw",
+      "text": "Kidole gumba chako ni kikubwa kadiri gani?",
+      "spoken": false,
+      "refused": "muted (--mute)"
+    },
+    {
+      "source": "stop_phrase",
+      "voice": "sw",
+      "text": "Sijui hili.",
+      "spoken": false,
+      "refused": "muted (--mute)"
+    }
+  ],
+  "transcript": "How big is your thumb?",
+  "translation_sw": "Kidole gumba chako ni kikubwa kadiri gani?",
+  "top3": [
+    {
+      "entry_id": "farm_size",
+      "score": 0.2771,
+      "closest_paraphrase": "how big is your farm",
+      "commitment": false,
+      "verified": true
+    },
+    {
+      "entry_id": "tipping",
+      "score": 0.2472,
+      "closest_paraphrase": "is a tip expected",
+      "commitment": true,
+      "verified": false
+    },
+    {
+      "entry_id": "altitude",
+      "score": 0.2466,
+      "closest_paraphrase": "how high are we here",
+      "commitment": false,
+      "verified": true
+    }
+  ],
+  "trigger_hits": [],
+  "match_threshold": 0.75,
+  "weak_match_floor": 0.45,
+  "route": "NO_MATCH",
+  "reason": "best score 0.277 < floor 0.45",
+  "route_recorded": "NO_MATCH"
+}

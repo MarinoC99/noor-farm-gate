@@ -1,0 +1,78 @@
+# Second commitment trigger (CLAUDE.md rule 4). If any of these appears in the guest's
+# English transcript, the exchange is a COMMITMENT and the tool stops, whatever entry
+# the question matched and however strongly. This catches "can my kids come on
+# Tuesday?" matching a harmless "can my children come" entry.
+#
+# Matching: case-insensitive, whole words or whole phrases ("cost" does not match
+# "costume"; "how much" needs both words in a row). A term made only of symbols, like
+# "$", matches anywhere, so "$20" counts. Inflections are not matched automatically:
+# list each form you want caught.
+#
+# The heading is the reason the tool states: it picks the stop phrase
+# commitment.<heading> in stop_phrases.yaml. Headings are checked top to bottom and
+# the first with a hit names the reason; every hit is shown in the trace.
+#
+# The list was specified by a human on 2026-10-03. The coder added the plural and -ing
+# forms and chose the currency words. Edit freely.
+#
+# "may" (the month) is deliberately absent. It fired on "May I take a picture of
+# this", a verified photos question, and made the tool tell Noor that question was
+# about a date. "how much" stays although it over-stops on quantity questions
+# ("how much coffee do you make a year"): stopping is the safe direction.
+
+date:
+  - monday
+  - tuesday
+  - wednesday
+  - thursday
+  - friday
+  - saturday
+  - sunday
+  - january
+  - february
+  - march
+  - april
+  - june
+  - july
+  - august
+  - september
+  - october
+  - november
+  - december
+  - today
+  - tonight
+  - tomorrow
+  - next week
+
+money:
+  - how much
+  - price
+  - prices
+  - cost
+  - costs
+  - pay
+  - pays
+  - paying
+  - paid
+  - payment
+  - money
+  - cash
+  - dollar
+  - dollars
+  - euro
+  - euros
+  - pound        # also catches "a pound of beans". Kept: a stop is the safe failure.
+  - pounds
+  - shilling
+  - shillings
+  - "$"
+  - "€"
+  - "£"
+
+safety:
+  - safe
+  - safety
+  - unsafe
+  - allergic
+  - allergy
+  - allergies

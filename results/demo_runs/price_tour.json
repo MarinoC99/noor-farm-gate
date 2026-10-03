@@ -1,0 +1,62 @@
+{
+  "input": {
+    "wav": "b4_price_tour.wav",
+    "note": "synthetic speech: macOS say, default voice, text \"how much does the tour cost\""
+  },
+  "spoken": [
+    {
+      "source": "guest_question_sw",
+      "voice": "sw",
+      "text": "Safari hiyo hugharimu kiasi gani?",
+      "spoken": false,
+      "refused": "muted (--mute)"
+    },
+    {
+      "source": "stop_phrase",
+      "voice": "sw",
+      "text": "Hili ni kuhusu pesa. Jibu wewe mwenyewe.",
+      "spoken": false,
+      "refused": "muted (--mute)"
+    }
+  ],
+  "transcript": "How much does the tour cost?",
+  "translation_sw": "Safari hiyo hugharimu kiasi gani?",
+  "top3": [
+    {
+      "entry_id": "price_tour",
+      "score": 0.926,
+      "closest_paraphrase": "how much is the tour",
+      "commitment": true,
+      "verified": false
+    },
+    {
+      "entry_id": "tour_duration",
+      "score": 0.6799,
+      "closest_paraphrase": "how long does the tour take",
+      "commitment": true,
+      "verified": false
+    },
+    {
+      "entry_id": "tour_now",
+      "score": 0.5521,
+      "closest_paraphrase": "can we do the tour now",
+      "commitment": true,
+      "verified": false
+    }
+  ],
+  "trigger_hits": [
+    {
+      "heading": "money",
+      "term": "how much"
+    },
+    {
+      "heading": "money",
+      "term": "cost"
+    }
+  ],
+  "match_threshold": 0.75,
+  "weak_match_floor": 0.45,
+  "route": "COMMITMENT",
+  "reason": "trigger words in transcript: how much, cost; reason money",
+  "route_recorded": "COMMITMENT"
+}

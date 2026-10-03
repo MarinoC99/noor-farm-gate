@@ -1,0 +1,39 @@
+# stop_phrases.yaml
+#
+# What the tool says to NOOR when it will not answer. The guest hears nothing.
+# All Swahili checked by a Swahili speaker, 3 October.
+#
+# Routing:
+#   no_match  — nothing matched, or the matched entry has no written answer
+#   money     — matched entry has intent: money, or a money trigger word fired
+#   date      — a date trigger word fired (there is no "date" intent; this comes
+#               from config/commitment_triggers.yaml)
+#   safety    — matched entry has intent: safety, or a safety trigger word fired
+#   default   — any other commitment stop
+
+phrases:
+
+  no_match:
+    en: "I don't know this one."
+    sw: "Sijui hili."
+    verified: true
+
+  money:
+    en: "This one is about money — you answer it."
+    sw: "Hili ni kuhusu pesa. Jibu wewe mwenyewe."
+    verified: true
+
+  date:
+    en: "This one is about a date — you answer it."
+    sw: "Hili ni kuhusu tarehe. Jibu wewe mwenyewe."
+    verified: true
+
+  safety:
+    en: "This one is about safety — you answer it."
+    sw: "Hili ni kuhusu usalama. Jibu wewe mwenyewe."
+    verified: true
+
+  default:
+    en: "I don't know this one."
+    sw: "Sijui hili."
+    verified: true

@@ -1,0 +1,60 @@
+{
+  "input": {
+    "wav": "b1_coffee_variety.wav",
+    "note": "synthetic speech: macOS say, default voice, text \"what kind of coffee is this\""
+  },
+  "spoken": [
+    {
+      "source": "guest_question_sw",
+      "voice": "sw",
+      "text": "Hiyo ni kahawa ya aina gani?",
+      "spoken": false,
+      "refused": "muted (--mute)"
+    },
+    {
+      "source": "bank_answer_sw",
+      "voice": "sw",
+      "text": "Ni arabika. Aina ya zamani aliyopanda baba yangu, na miti mingine mipya kwenye safu za juu.",
+      "spoken": false,
+      "refused": "muted (--mute)"
+    },
+    {
+      "source": "bank_answer_en",
+      "voice": "en",
+      "text": "It's arabica. The old variety my father planted, and some newer trees on the upper rows.",
+      "spoken": false,
+      "refused": "muted (--mute)"
+    }
+  ],
+  "transcript": "What kind of coffee is this?",
+  "translation_sw": "Hiyo ni kahawa ya aina gani?",
+  "top3": [
+    {
+      "entry_id": "coffee_variety",
+      "score": 0.9848,
+      "closest_paraphrase": "what kind of coffee is this",
+      "commitment": false,
+      "verified": true
+    },
+    {
+      "entry_id": "taste_profile",
+      "score": 0.6298,
+      "closest_paraphrase": "what does your coffee taste like",
+      "commitment": false,
+      "verified": false
+    },
+    {
+      "entry_id": "brewing_method",
+      "score": 0.5782,
+      "closest_paraphrase": "how do you make your coffee at home",
+      "commitment": false,
+      "verified": false
+    }
+  ],
+  "trigger_hits": [],
+  "match_threshold": 0.75,
+  "weak_match_floor": 0.45,
+  "route": "BANK",
+  "reason": "score 0.985 >= threshold 0.75, not a commitment, no trigger words",
+  "route_recorded": "BANK"
+}

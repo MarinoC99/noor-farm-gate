@@ -1,0 +1,53 @@
+{
+  "input": {
+    "wav": "x1_altitude.wav",
+    "note": "synthetic speech: macOS say, default voice, text \"what's the altitude\""
+  },
+  "spoken": [
+    {
+      "source": "guest_question_sw",
+      "voice": "sw",
+      "text": "Mtazamo ni nini?",
+      "spoken": false,
+      "refused": "muted (--mute)"
+    },
+    {
+      "source": "stop_phrase",
+      "voice": "sw",
+      "text": "Sijui hili.",
+      "spoken": false,
+      "refused": "muted (--mute)"
+    }
+  ],
+  "transcript": "What's the attitude?",
+  "translation_sw": "Mtazamo ni nini?",
+  "top3": [
+    {
+      "entry_id": "how_much_produced",
+      "score": 0.3491,
+      "closest_paraphrase": "what's your harvest like",
+      "commitment": false,
+      "verified": false
+    },
+    {
+      "entry_id": "fair_price",
+      "score": 0.3052,
+      "closest_paraphrase": "is it a good living",
+      "commitment": false,
+      "verified": false
+    },
+    {
+      "entry_id": "who_works_here",
+      "score": 0.2549,
+      "closest_paraphrase": "how many people work here",
+      "commitment": false,
+      "verified": false
+    }
+  ],
+  "trigger_hits": [],
+  "match_threshold": 0.75,
+  "weak_match_floor": 0.45,
+  "route": "NO_MATCH",
+  "reason": "best score 0.349 < floor 0.45",
+  "route_recorded": "NO_MATCH"
+}

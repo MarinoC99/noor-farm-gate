@@ -1,10 +1,16 @@
 models/*
 !models/.gitkeep
+.cache/
 .venv/
 __pycache__/
 node_modules/
 .DS_Store
 
+# Exchange records (SPEC-V2.md data model). Guest question text lives here, so it
+# stays on the device and out of the repo.
+records/
+
 # The concept note is marked "Official Use Only". Kept out of the repo, which may
 # become public as the submission's code link.
 file-2.pdf
+files.zip

@@ -1,1 +1,11 @@
-PyYAML>=6,<7
+# Runtime only. Model conversion deps (torch, transformers) live in the isolated env
+# that scripts/fetch_models.sh builds, so they never ship.
+ctranslate2==4.8.2
+faster-whisper==1.2.1
+onnxruntime==1.23.2
+tokenizers==0.23.2
+sentencepiece==0.2.2
+piper-tts==1.8.0
+sounddevice==0.5.6
+numpy==2.4.6
+PyYAML==6.0.3

@@ -1,0 +1,60 @@
+{
+  "input": {
+    "wav": "b3_parking.wav",
+    "note": "synthetic speech: macOS say, default voice, text \"where can I park\""
+  },
+  "spoken": [
+    {
+      "source": "guest_question_sw",
+      "voice": "sw",
+      "text": "Ninaweza kuegesha nini?",
+      "spoken": false,
+      "refused": "muted (--mute)"
+    },
+    {
+      "source": "bank_answer_sw",
+      "voice": "sw",
+      "text": "Pale chini kwenye mti mkubwa, njia inapopanuka. Juu ya hapo barabara huharibika baada ya mvua.",
+      "spoken": false,
+      "refused": "muted (--mute)"
+    },
+    {
+      "source": "bank_answer_en",
+      "voice": "en",
+      "text": "By the big tree at the bottom, where the track widens. The road above that gets bad after rain.",
+      "spoken": false,
+      "refused": "muted (--mute)"
+    }
+  ],
+  "transcript": "What can I park?",
+  "translation_sw": "Ninaweza kuegesha nini?",
+  "top3": [
+    {
+      "entry_id": "parking",
+      "score": 0.8684,
+      "closest_paraphrase": "where can I park",
+      "commitment": false,
+      "verified": true
+    },
+    {
+      "entry_id": "mobility",
+      "score": 0.3521,
+      "closest_paraphrase": "is there a wheelchair route",
+      "commitment": true,
+      "verified": false
+    },
+    {
+      "entry_id": "accommodation",
+      "score": 0.301,
+      "closest_paraphrase": "could we camp here",
+      "commitment": true,
+      "verified": false
+    }
+  ],
+  "trigger_hits": [],
+  "match_threshold": 0.75,
+  "weak_match_floor": 0.45,
+  "route": "BANK",
+  "reason": "score 0.868 >= threshold 0.75, not a commitment, no trigger words",
+  "route_recorded": "BANK"
+}

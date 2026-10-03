@@ -1,0 +1,19 @@
+# How strong a match must be before the tool will consider answering from the bank.
+#
+# Score: cosine similarity between the guest's English question and the closest
+# paraphrase of an entry, both embedded with all-MiniLM-L6-v2 (mean-pooled,
+# L2-normalised). The entry's score is its best paraphrase.
+#
+# PLACEHOLDER, NOT MEASURED. Set on 2026-10-03 before any match score had been seen,
+# just above the "70% similar" that SPEC-V2.md names as the dangerous near-miss zone.
+# TODO(measure): set this from held-out paraphrases once the bank is written, and do
+# not move it to make a number look better (CLAUDE.md).
+match_threshold: 0.75
+
+# Below match_threshold the tool always stops and says "Sijui hili". This only
+# decides how the exchange is recorded for the Stage 3 summary; behaviour is the same:
+#   score >= weak_match_floor  -> WEAK_MATCH  ("we nearly had this")
+#   score <  weak_match_floor  -> NO_MATCH    ("we have nothing")
+#
+# Set by a human on 2026-10-03. Not measured. TODO(measure).
+weak_match_floor: 0.45

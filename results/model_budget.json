@@ -1,0 +1,132 @@
+{
+  "measured_at": "2026-10-03T21:17:15+00:00",
+  "machine": "x86_64",
+  "budget_bytes": 400000000,
+  "models_dir_total_bytes": 309198213,
+  "models_dir_total_mb": 309.2,
+  "models_dir_within_budget": true,
+  "models_dir_headroom_mb": 90.8,
+  "outside_models_dir_bytes": {
+    "piper-tts: espeak-ng-data (phonemizer data, used by both voices)": 19085297,
+    "piper-tts: tashkeel (Arabic diacritizer model, bundled, not used)": 4796334,
+    "faster-whisper: assets (Silero VAD model, bundled, not used)": 1245151
+  },
+  "total_including_used_package_data_bytes": 328283510,
+  "total_including_used_package_data_mb": 328.3,
+  "components": {
+    "all-MiniLM-L6-v2-onnx-int8": {
+      "bytes": 23524150,
+      "files": {
+        "all-MiniLM-L6-v2-onnx-int8/README.md": {
+          "bytes": 10502,
+          "sha256": "dcd602d2fd35c203a247304a06fec6654a12f7941b739f9221a064fe8dc3b7f0"
+        },
+        "all-MiniLM-L6-v2-onnx-int8/config.json": {
+          "bytes": 612,
+          "sha256": "953f9c0d463486b10a6871cc2fd59f223b2c70184f49815e7efbcab5d8908b41"
+        },
+        "all-MiniLM-L6-v2-onnx-int8/model_quint8_avx2.onnx": {
+          "bytes": 23046789,
+          "sha256": "b941bf19f1f1283680f449fa6a7336bb5600bdcd5f84d10ddc5cd72218a0fd21"
+        },
+        "all-MiniLM-L6-v2-onnx-int8/tokenizer.json": {
+          "bytes": 466247,
+          "sha256": "be50c3628f2bf5bb5e3a7f17b1f74611b2561a3a27eeab05e5aa30f411572037"
+        }
+      }
+    },
+    "opus-mt-en-sw-ct2-int8": {
+      "bytes": 79100790,
+      "files": {
+        "opus-mt-en-sw-ct2-int8/README.md": {
+          "bytes": 823,
+          "sha256": "7b84847254e1d970577af44e498437c197b23bdf19c23cdb1401a81d6db0c10e"
+        },
+        "opus-mt-en-sw-ct2-int8/config.json": {
+          "bytes": 223,
+          "sha256": "8f6496adfc930cbfecbe8281112197705c488fab47d34b4829b06d7f478909af"
+        },
+        "opus-mt-en-sw-ct2-int8/model.bin": {
+          "bytes": 76421115,
+          "sha256": "8e046a85f58b79ac91490024015de20661d4c6b855f54d1d3fe6817ff064188a"
+        },
+        "opus-mt-en-sw-ct2-int8/shared_vocabulary.json": {
+          "bytes": 1044560,
+          "sha256": "c778bb607550da9def2462e7c413d8e105a8558a9edd9e1db3b4d638ad9445b7"
+        },
+        "opus-mt-en-sw-ct2-int8/source.spm": {
+          "bytes": 820602,
+          "sha256": "49d825aac86bf2083c0952b920479aa0d86376613cb9da552135723f9e6aebda"
+        },
+        "opus-mt-en-sw-ct2-int8/target.spm": {
+          "bytes": 813467,
+          "sha256": "80090fbc9ccdbcd1982ddd13b2bb790bf927491fab206565c715f498a4803b9d"
+        }
+      }
+    },
+    "piper/en_US-ljspeech-medium": {
+      "bytes": 63536868,
+      "files": {
+        "piper/en_US-ljspeech-medium/MODEL_CARD": {
+          "bytes": 517,
+          "sha256": "fbee1529c89d36b3fe76d7e9f3f832dce17f44900a52d76a9bda735654766b4d"
+        },
+        "piper/en_US-ljspeech-medium/en_US-ljspeech-medium.onnx": {
+          "bytes": 63531379,
+          "sha256": "6f52a751e2349abe7a76735eb09dc1875298c77ea2342ffd2fef79ff81b87f22"
+        },
+        "piper/en_US-ljspeech-medium/en_US-ljspeech-medium.onnx.json": {
+          "bytes": 4972,
+          "sha256": "141d612cc0a95ed7efc1ca936b845c2364967f2e9217c5dbfcf69fc4d6c65860"
+        }
+      }
+    },
+    "piper/sw_CD-lanfrica-medium": {
+      "bytes": 63206514,
+      "files": {
+        "piper/sw_CD-lanfrica-medium/MODEL_CARD": {
+          "bytes": 315,
+          "sha256": "763a444ca0e205ac08bd3bf3a4d3d44da58f56d244a145adf22eb0a863638ab2"
+        },
+        "piper/sw_CD-lanfrica-medium/sw_CD-lanfrica-medium.onnx": {
+          "bytes": 63201294,
+          "sha256": "1f195ed12ca5e7875114618e5f00207af364602e21ca78c8a6d3d7674f9259fa"
+        },
+        "piper/sw_CD-lanfrica-medium/sw_CD-lanfrica-medium.onnx.json": {
+          "bytes": 4905,
+          "sha256": "5bd6f6ad659aa8f1f89f414e23a3df84fc753eb9c066e91fe86729da2ad4c1fc"
+        }
+      }
+    },
+    "whisper-base.en-ct2-int8": {
+      "bytes": 79829394,
+      "files": {
+        "whisper-base.en-ct2-int8/README.md": {
+          "bytes": 14846,
+          "sha256": "767c687e78cb62c9607ce6ff077ab3368dae8072cee8cab6aeaa1246fc6a021c"
+        },
+        "whisper-base.en-ct2-int8/config.json": {
+          "bytes": 2238,
+          "sha256": "48089efbd589828d0d8e7c7869c4ea9c28e81d0a5e62e2191218e772fe1543b5"
+        },
+        "whisper-base.en-ct2-int8/model.bin": {
+          "bytes": 76396161,
+          "sha256": "4ed9e9b5ff94611603854e0abf79badb1d9f3ae3a4b1f3537d93a116e31db33f"
+        },
+        "whisper-base.en-ct2-int8/preprocessor_config.json": {
+          "bytes": 184990,
+          "sha256": "9b5cd03a36fbb8a627c64d98a5b5b126ead95a77720723944487311f0110b666"
+        },
+        "whisper-base.en-ct2-int8/tokenizer.json": {
+          "bytes": 2405679,
+          "sha256": "5eb60cec1e77aeeb6869a2bb5a8e01a84c3fe5d072d75369343021fe6f5310d0"
+        },
+        "whisper-base.en-ct2-int8/vocabulary.json": {
+          "bytes": 825480,
+          "sha256": "4dadfee7c4a871665f65c06037f5f5ec893fb2d7f5eb4cf11063618e31dbe11a"
+        }
+      }
+    }
+  },
+  "loose_files_bytes": 497
+}
