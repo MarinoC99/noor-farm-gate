@@ -5,128 +5,127 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Noor's farm gate</title>
 <style>
-  /* Designed for daylight: one light, high-contrast palette, no dark variant. */
+  /* Daylight, simple: one accent, greys, type and space do the work. Light only. */
   :root {
     color-scheme: light;
-    --ink: #0b0b0b; --muted: #3f3f3f; --divider: #0b0b0b;
-    --guest-bg: #ffffff; --guest-band: #0a3d7a; --guest-card: #e7effa;
-    --noor-bg: #fff3d6;  --noor-band: #1e5a2b;  --noor-card: #ffffff;
-    --go: #1e5a2b; --rec: #b00020;
-    --verified: #1e5a2b; --unverified: #b00020;
-    --r-money: #8a4b00; --r-date: #1f4e99; --r-safety: #a1001c; --r-unknown: #3d3d3d;
+    --ink: #0d0d0d; --ink-2: #3a3a3a; --muted: #5c5c5c; --hair: #d4d4d4;
+    --paper: #ffffff; --tint: #f4f4f2;
+    --accent: #1d5c3a; --accent-ink: #ffffff;
+    --alert: #b00020;
   }
   * { box-sizing: border-box; }
-  html, body { margin: 0; height: 100%; background: var(--guest-bg); color: var(--ink);
+  html, body { margin: 0; height: 100%; background: var(--paper); color: var(--ink);
                font: 20px/1.35 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
                -webkit-text-size-adjust: 100%; }
   [hidden] { display: none !important; }
   p { margin: 0; }
-  button { font: inherit; font-weight: 700; color: var(--ink); background: #fff;
-           border: 3px solid var(--ink); border-radius: 16px; min-height: 88px; padding: 14px 22px;
+  button { font: inherit; font-weight: 650; color: var(--ink); background: var(--paper);
+           border: 2px solid var(--ink); border-radius: 14px; min-height: 84px; padding: 12px 20px;
            touch-action: manipulation; cursor: pointer; }
-  button:focus-visible { outline: 4px solid #ffbf00; outline-offset: 3px; }
+  button:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
   button:disabled { opacity: .3; }
 
   /* Start: one screen, one action. */
-  #start { position: fixed; inset: 0; display: flex; flex-direction: column; gap: 28px;
-           align-items: center; justify-content: center; background: var(--noor-bg); padding: 24px; }
-  #start h1 { margin: 0; font-size: 2rem; letter-spacing: .01em; }
-  #start-btn { width: min(80vw, 460px); min-height: 150px; font-size: 2.2rem;
-               background: var(--go); border-color: var(--go); color: #fff; }
+  #start { position: fixed; inset: 0; display: flex; flex-direction: column; gap: 32px;
+           align-items: center; justify-content: center; padding: 24px; }
+  #start h1 { margin: 0; font-size: 1.9rem; font-weight: 700; letter-spacing: -.01em; }
+  #start-btn { width: min(80vw, 440px); min-height: 132px; font-size: 2rem;
+               background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
 
-  /* Two halves, unmistakably different, with a hard line between them. */
+  /* Two halves: a hairline and a faint tint, nothing heavier. */
   #conv { display: flex; height: 100%; }
-  section { flex: 1; display: flex; flex-direction: column; overflow-y: auto; min-width: 0;
-            padding-bottom: calc(56px + env(safe-area-inset-bottom)); }
-  #guest { background: var(--guest-bg); border-right: 6px solid var(--divider);
+  section { flex: 1; display: flex; flex-direction: column; overflow-y: auto; min-width: 0; }
+  #guest { background: var(--paper); border-right: 1px solid var(--hair);
            padding-left: env(safe-area-inset-left); }
-  #noor  { background: var(--noor-bg); padding-right: env(safe-area-inset-right); }
-  .band { color: #fff; font-weight: 800; font-size: 1.05rem; letter-spacing: .12em;
-          text-transform: uppercase; padding: 14px 20px; padding-top: calc(14px + env(safe-area-inset-top)); }
-  #guest .band { background: var(--guest-band); }
-  #noor .band  { background: var(--noor-band); }
-  .body { display: flex; flex-direction: column; gap: 16px; padding: 18px 20px; }
-  .label { font-size: .8rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase;
+  #noor  { background: var(--tint); padding-right: env(safe-area-inset-right); }
+  .band { font-size: .8rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase;
+          color: var(--muted); padding: 20px 24px 0; padding-top: calc(20px + env(safe-area-inset-top)); }
+  .body { display: flex; flex-direction: column; gap: 14px; padding: 16px 24px 28px; }
+  .label { font-size: .75rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
            color: var(--muted); }
   .text { font-size: 1.5rem; font-weight: 600; min-height: 1.35em; }
 
+  /* Language status: one thin line of small text. Quiet when verified, red when not. */
+  .lang-status { font-size: .85rem; font-weight: 600; padding: 6px 24px 0; color: var(--muted); }
+  .lang-status.unverified { color: var(--alert); font-weight: 750; }
+
   /* Guest */
-  #talk { width: 100%; min-height: max(140px, 26vh); font-size: 1.9rem;
-          background: var(--guest-band); border-color: var(--guest-band); color: #fff;
+  #talk { width: 100%; min-height: max(128px, 24vh); font-size: 1.8rem;
+          background: var(--ink); border-color: var(--ink); color: #fff;
           user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; touch-action: none; }
-  #talk.rec { background: var(--rec); border-color: var(--rec); }
-  .answer-card { background: var(--guest-card); border-radius: 16px; padding: 18px 20px;
-                 font-size: 1.9rem; font-weight: 800; line-height: 1.25; }
-  .answer-card:empty { display: none; }
-  #g-status { font-size: 1.1rem; font-weight: 700; color: var(--muted); }
-
-  /* Noor: language status, verified or not, always visible */
-  .lang-status { font-weight: 800; font-size: 1.05rem; line-height: 1.3; padding: 12px 20px; color: #fff; }
-  .lang-status.verified   { background: var(--verified); border-bottom: 4px solid #0f3518; }
-  .lang-status.unverified { background: var(--unverified); border-bottom: 4px solid #6d0014; }
-
-  /* Unverified mode: the answer itself says so too, not only the bar above it. */
-  #noor.unverified-mode .noor-answer { border-color: var(--unverified); border-style: dashed; }
+  #talk.rec { background: var(--accent); border-color: var(--accent); }
+  .answer-card { font-size: 1.9rem; font-weight: 750; line-height: 1.25; }
+  .answer-card:empty, .label:has(+ .answer-card:empty) { display: none; }
+  #g-status { font-size: 1.05rem; font-weight: 600; color: var(--muted); }
 
   /* Noor: an answer to approve */
-  .noor-answer { background: var(--noor-card); border: 3px solid var(--go); border-radius: 18px;
-                 padding: 18px 20px; display: flex; flex-direction: column; gap: 16px; }
-  #n-answer { font-size: 2rem; font-weight: 800; line-height: 1.25; }
-  .actions { display: flex; gap: 14px; }
-  #send { flex: 2 1 0; min-height: 120px; font-size: 2rem;
-          background: var(--go); border-color: var(--go); color: #fff; }
-  #decline { flex: 1 1 0; font-size: 1.05rem; padding: 10px 12px; }
+  .noor-answer { display: flex; flex-direction: column; gap: 18px; padding-top: 14px;
+                 border-top: 1px solid var(--hair); }
+  #n-question { font-weight: 500; color: var(--ink-2); }
+  #n-answer { font-size: 2rem; font-weight: 750; line-height: 1.25; }
+  #noor.unverified-mode #n-answer { color: var(--alert); }
+  .actions { display: flex; gap: 12px; }
+  #send { flex: 2 1 0; min-height: 112px; font-size: 1.9rem;
+          background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+  #decline { flex: 1 1 0; font-size: 1rem; padding: 10px 12px; border-color: var(--hair); color: var(--ink-2); }
 
-  /* Noor: a stop. The tool deliberately hands back to her, with the reason shown. */
-  .stop { --reason: var(--r-unknown); background: var(--noor-card); border-radius: 18px;
-          border: 3px solid var(--reason); border-left-width: 18px; padding: 18px 22px;
-          display: flex; flex-direction: column; gap: 14px; }
-  .stop[data-reason="money"]  { --reason: var(--r-money); }
-  .stop[data-reason="date"]   { --reason: var(--r-date); }
-  .stop[data-reason="safety"] { --reason: var(--r-safety); }
-  .stop-head { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
-  .stop-hand { font-size: 2.2rem; line-height: 1; }
-  .tag { background: var(--reason); color: #fff; font-weight: 800; font-size: 1.1rem;
-         letter-spacing: .1em; text-transform: uppercase; border-radius: 999px; padding: 8px 18px; }
-  .stop-phrase { font-size: 2.6rem; font-weight: 800; line-height: 1.15; }
-  #n-stop-gloss { font-size: 1rem; font-weight: 600; color: var(--muted); }
+  /* Noor: a stop. A deliberate pause: a quiet mark, the reason in small type, the phrase large. */
+  .stop { display: flex; flex-direction: column; gap: 14px; padding: 18px 0 6px;
+          border-top: 1px solid var(--hair); }
+  .stop-head { display: flex; align-items: center; gap: 14px; }
+  .pause { display: inline-flex; gap: 6px; }
+  .pause::before, .pause::after { content: ""; width: 7px; height: 26px; border-radius: 2px; background: var(--ink); }
+  .tag { font-size: .8rem; font-weight: 750; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-2); }
+  .stop-phrase { font-size: 2.6rem; font-weight: 750; line-height: 1.15; letter-spacing: -.01em; }
+  #n-stop-gloss { font-size: 1rem; color: var(--muted); }
 
-  /* Phone upright: halves stack, Noor's gets more room. After the base rules so it wins. */
+  /* Phone upright: halves stack; Noor's gets more room. After the base rules so it wins. */
   @media (orientation: portrait) {
     #conv { flex-direction: column; }
-    #guest { flex: 2; border-right: 0; border-bottom: 6px solid var(--divider); }
-    #noor { flex: 3; }   /* Noor reads and approves; she gets more of the screen */
-    #talk { min-height: 96px; font-size: 1.6rem; }
-    .answer-card, #n-answer { font-size: 1.45rem; line-height: 1.2; }
+    #guest { flex: 0 0 auto; border-right: 0; border-bottom: 1px solid var(--hair); }
+    #noor { flex: 1 1 auto; }
+    .band { padding: 10px 18px 0; padding-top: calc(10px + env(safe-area-inset-top)); }
+    .lang-status { padding: 4px 18px 0; }
+    .body { gap: 8px; padding: 8px 18px 10px; }
+    #talk { min-height: 72px; font-size: 1.4rem; }
+    .text { font-size: 1.15rem; }
+    .answer-card { font-size: 1.4rem; }
+    .noor-answer { gap: 12px; padding-top: 10px; }
     .noor-answer > .label { display: none; }
-    #send { min-height: 84px; font-size: 1.6rem; }
-    #decline { min-height: 84px; }
-    .stop-phrase { font-size: 2.1rem; }
+    #n-answer { font-size: 1.25rem; line-height: 1.2; }
+    #send { min-height: 76px; font-size: 1.5rem; }
+    #decline { min-height: 76px; font-size: .95rem; }
+    .stop-phrase { font-size: 2rem; }
   }
 
   /* Phone in landscape: little height, so tighten everything that isn't the content. */
   @media (max-height: 500px) {
     html, body { font-size: 17px; }
-    .band { padding: 8px 16px; padding-top: calc(8px + env(safe-area-inset-top)); font-size: .9rem; }
-    .lang-status { padding: 7px 16px; font-size: .9rem; }
-    .body { gap: 10px; padding: 12px 16px; }
-    #talk { min-height: 96px; font-size: 1.6rem; }
+    .band { padding: 10px 18px 0; padding-top: calc(10px + env(safe-area-inset-top)); }
+    .lang-status { padding: 4px 18px 0; }
+    .body { gap: 8px; padding: 8px 18px 14px; }
+    #talk { min-height: 92px; font-size: 1.55rem; }
     .text { font-size: 1.2rem; }
     .answer-card, #n-answer { font-size: 1.25rem; line-height: 1.2; }
-    .noor-answer, .stop { padding: 10px 14px; gap: 8px; }
-    .noor-answer > .label { display: none; }   /* the green card already says "your answer" */
+    .noor-answer { gap: 10px; padding-top: 8px; }
+    .noor-answer > .label { display: none; }
     #send { min-height: 72px; font-size: 1.5rem; }
     #decline { min-height: 72px; font-size: .95rem; }
+    .stop { gap: 8px; padding-top: 10px; }
     .stop-phrase { font-size: 2rem; }
-    .stop-hand { font-size: 1.7rem; }
   }
 
   /* Developer trace: tucked into a corner, out of the conversation's way. */
   #trace { position: fixed; left: calc(10px + env(safe-area-inset-left)); bottom: calc(10px + env(safe-area-inset-bottom));
            max-width: min(92vw, 640px); max-height: 50vh; overflow: auto; z-index: 5;
-           background: #fff; border: 2px solid var(--muted); border-radius: 10px; font-size: 12px; }
-  #trace summary { padding: 6px 12px; font-weight: 700; color: var(--muted); cursor: pointer; }
+           background: #fff; border: 1px solid var(--hair); border-radius: 10px; font-size: 12px; }
+  #trace summary { padding: 6px 12px; font-weight: 600; color: var(--muted); cursor: pointer; }
   #trace pre { margin: 0; padding: 8px 12px; white-space: pre-wrap; }
+  #trace:not([open]) { max-height: 40px; width: auto; overflow: hidden; }
+  #trace:not([open]) pre { display: none; }
+  @media (orientation: portrait) {   /* upright, the bottom is where Send lives: trace goes top-right */
+    #trace { left: auto; right: 10px; bottom: auto; top: calc(8px + env(safe-area-inset-top)); }
+  }
 </style>
 </head>
 <body>
@@ -171,7 +170,7 @@
 
       <div id="n-stop-block" class="stop" hidden>
         <div class="stop-head">
-          <span class="stop-hand" aria-hidden="true">✋</span>
+          <span class="pause" aria-hidden="true"></span>
           <span id="n-stop-tag" class="tag"></span>
         </div>
         <p id="n-stop" class="stop-phrase"></p>
@@ -342,8 +341,8 @@ function showLanguage(info) {
   const unverified = !!info.noor_language_unverified;
   status.className = "lang-status " + (unverified ? "unverified" : "verified");
   status.textContent = unverified
-    ? "⚠ UNVERIFIED · not checked by a " + lang + " speaker · test mode"
-    : "✓ VERIFIED · checked by a " + lang + " speaker";
+    ? "Unverified: not checked by a " + lang + " speaker. Test mode."
+    : "✓ Checked by a " + lang + " speaker";
   status.hidden = false;
   $("noor").classList.toggle("unverified-mode", unverified);
 }
