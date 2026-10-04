@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Noor's farm gate: summary</title>
+<style>
+  /* Same system as the conversation page: one accent, greys, type and space. Light only. */
+  :root {
+    color-scheme: light;
+    --ink: #0d0d0d; --ink-2: #3a3a3a; --muted: #5c5c5c; --hair: #d4d4d4;
+    --paper: #ffffff; --tint: #f4f4f2; --accent: #1d5c3a;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--paper); color: var(--ink);
+               font: 20px/1.35 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+               -webkit-text-size-adjust: 100%; }
+  [hidden] { display: none !important; }
+  p, h1, h2, ul { margin: 0; }
+  main { max-width: 860px; margin: 0 auto;
+         padding: calc(18px + env(safe-area-inset-top)) max(20px, env(safe-area-inset-right))
+                  calc(48px + env(safe-area-inset-bottom)) max(20px, env(safe-area-inset-left)); }
+  header { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; }
+  .side { font-size: .8rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+  a.back { color: var(--ink); font-weight: 650; font-size: 1rem; text-decoration: none;
+           border: 2px solid var(--ink); border-radius: 12px; padding: 10px 16px; }
+  h1 { font-size: 2.2rem; font-weight: 750; letter-spacing: -.01em; margin-top: 6px; }
+  h2 { font-size: 1.35rem; font-weight: 750; }
+  .note { font-size: .95rem; color: var(--muted); margin-top: 4px; }
+  section { padding: 28px 0; border-top: 1px solid var(--hair); }
+  .headline { display: flex; gap: 40px; padding: 18px 0 24px; border-top: 0; }
+  .big { font-size: 3.2rem; font-weight: 750; line-height: 1; letter-spacing: -.02em; }
+  .big-label { font-size: .8rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin-top: 6px; }
+  .test-note { font-size: .9rem; color: var(--muted); }
+
+  /* The gap: what guests asked that has no answer. The most prominent list. */
+  .gaps { list-style: none; padding: 0; margin-top: 16px; display: flex; flex-direction: column; }
+  .gap { display: grid; grid-template-columns: 3.4rem 1fr; gap: 4px 14px; padding: 16px 0; border-top: 1px solid var(--hair); }
+  .gap:first-child { border-top: 0; }
+  .count { font-size: 1.9rem; font-weight: 750; line-height: 1.1; grid-row: span 3; }
+  .q-noor { font-size: 1.45rem; font-weight: 700; line-height: 1.25; }
+  .q-en { font-size: 1rem; color: var(--ink-2); }
+  .variants { font-size: .9rem; color: var(--muted); }
+
+  /* Plain rows with a thin bar: number first, no colour coding beyond one accent. */
+  .rows { display: flex; flex-direction: column; gap: 12px; margin-top: 16px; }
+  .row { display: grid; grid-template-columns: 2.6rem 1fr; gap: 2px 12px; align-items: baseline; }
+  .row .n { font-size: 1.4rem; font-weight: 750; text-align: right; }
+  .row .what { font-size: 1.05rem; font-weight: 600; }
+  .row .bar { grid-column: 2; height: 6px; background: var(--tint); border-radius: 3px; overflow: hidden; }
+  .row .bar i { display: block; height: 100%; background: var(--ink-2); }
+  .row.accent .bar i { background: var(--accent); }
+  .row .sub { grid-column: 2; font-size: .95rem; color: var(--muted); }
+  .empty { color: var(--muted); font-size: 1.05rem; margin-top: 12px; }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <div>
+      <p class="side" id="side">Noor</p>
+      <h1 id="title">Summary</h1>
+    </div>
+    <a class="back" href="/" id="back">Back</a>
+  </header>
+
+  <div class="headline">
+    <div><p class="big" id="visits">–</p><p class="big-label" id="visits-label">Visits</p></div>
+    <div><p class="big" id="questions">–</p><p class="big-label" id="questions-label">Questions</p></div>
+  </div>
+  <p class="test-note" id="test-note" hidden></p>
+
+  <section>
+    <h2 id="gaps-title"></h2>
+    <p class="note" id="gaps-note"></p>
+    <p class="note" id="gaps-machine"></p>
+    <ul class="gaps" id="gaps"></ul>
+  </section>
+
+  <section>
+    <h2 id="outcomes-title"></h2>
+    <div class="rows" id="outcomes"></div>
+  </section>
+
+  <section>
+    <h2 id="reasons-title"></h2>
+    <div class="rows" id="reasons"></div>
+  </section>
+
+  <section>
+    <h2 id="commit-title"></h2>
+    <p class="note" id="commit-note"></p>
+    <div class="rows" id="commit"></div>
+  </section>
+
+  <section>
+    <h2 id="intents-title"></h2>
+    <div class="rows" id="intents"></div>
+  </section>
+</main>
+
+<script>
+"use strict";
+const $ = (id) => document.getElementById(id);
+const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+
+function rows(target, items, total, L) {
+  target.replaceChildren();
+  if (!items.length) { target.append(el("p", "empty", L.empty)); return; }
+  for (const it of items) {
+    const r = el("div", "row" + (it.accent ? " accent" : ""));
+    r.append(el("span", "n", String(it.n)), el("span", "what", it.what));
+    const bar = el("span", "bar"), fill = el("i");
+    fill.style.width = (total ? Math.round(100 * it.n / total) : 0) + "%";
+    bar.append(fill); r.append(bar);
+    if (it.sub) r.append(el("span", "sub", it.sub));
+    target.append(r);
+  }
+}
+
+async function load() {
+  const d = await (await fetch("/api/summary")).json();
+  const L = d.labels;
+  document.documentElement.lang = d.language.code;
+  $("side").textContent = "Noor · " + d.language.name;
+  for (const [id, key] of [["title", "title"], ["back", "back"], ["visits-label", "visits"], ["questions-label", "questions"],
+                           ["gaps-title", "gaps_title"], ["gaps-note", "gaps_note"], ["gaps-machine", "machine_note"],
+                           ["outcomes-title", "outcomes_title"], ["reasons-title", "reasons_title"],
+                           ["commit-title", "commit_title"], ["commit-note", "commit_note"], ["intents-title", "intents_title"]]) {
+    $(id).textContent = L[key];
+  }
+  $("visits").textContent = d.visits;
+  $("questions").textContent = d.records;
+  if (d.test_records) { $("test-note").hidden = false; $("test-note").textContent = d.test_records + " / " + d.records + " · " + L.includes_test; }
+
+  // The gap, most asked first.
+  const gaps = $("gaps"); gaps.replaceChildren();
+  if (!d.gaps.length) gaps.append(el("li", "empty", L.empty));
+  for (const g of d.gaps) {
+    const li = el("li", "gap");
+    li.append(el("span", "count", g.count + "×"), el("span", "q-noor", g.question_noor), el("span", "q-en", g.question_en));
+    if (g.variants.length) li.append(el("span", "variants", L.also_asked_as + ": " + g.variants.map(v => "“" + v.wording + "”" + (v.count > 1 ? " ×" + v.count : "")).join(" · ")));
+    gaps.append(li);
+  }
+
+  const o = d.outcomes;
+  rows($("outcomes"), [
+    {n: o.answered, what: L.answered, accent: true},
+    {n: o.handed_back, what: L.handed_back},
+    {n: o.stopped_commitment, what: L.stopped_commitment},
+    {n: o.stopped_known, what: L.stopped_known},
+    {n: o.stopped_weak, what: L.stopped_weak},
+    {n: o.stopped_unknown, what: L.stopped_unknown},
+  ], d.records, L);
+  const totalCommit = o.stopped_commitment;
+  rows($("reasons"), Object.entries(d.commitment_reasons).map(([k, n]) => ({n, what: L["reason_" + k] || k})), totalCommit, L);
+  rows($("commit"), d.commitment_entries.map(c => ({n: c.count, what: c.question_noor, sub: c.question_en + " · " + (L["reason_" + c.reason] || c.reason)})), totalCommit, L);
+  rows($("intents"), Object.entries(d.intents).map(([k, n]) => ({n, what: L["intent_" + k] || k})), d.records, L);
+}
+load();
+</script>
+</body>
+</html>

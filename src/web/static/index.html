@@ -29,6 +29,7 @@
   #start { position: fixed; inset: 0; display: flex; flex-direction: column; gap: 32px;
            align-items: center; justify-content: center; padding: 24px; }
   #start h1 { margin: 0; font-size: 1.9rem; font-weight: 700; letter-spacing: -.01em; }
+  #summary-link { color: var(--ink-2); font-weight: 650; font-size: 1.05rem; padding: 12px 18px; }
   #start-btn { width: min(80vw, 440px); min-height: 132px; font-size: 2rem;
                background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
 
@@ -134,6 +135,7 @@
 <div id="start">
   <h1>Noor's farm gate</h1>
   <button id="start-btn">Start</button>
+  <a id="summary-link" href="/summary">Summary</a>
 </div>
 
 <main id="conv" hidden>
@@ -361,6 +363,9 @@ $("start-btn").addEventListener("click", async () => {
     $("start-btn").textContent = "Start (" + e.message + ")";
   }
 });
+
+// The summary link speaks Noor's language once its label is written.
+fetch("/api/labels").then(r => r.json()).then(d => { $("summary-link").textContent = d.labels.open_summary; }).catch(() => {});
 
 // For testing without a microphone: window.debugAsk(blob) runs a recording through the same path.
 window.debugAsk = async (blob) => { state = "working"; try { await ask(blob); } finally { state = "idle"; } };

@@ -43,6 +43,7 @@ ROOT = Path(__file__).resolve().parents[2]
 CONFIG = ROOT / "config"
 RECORDS = ROOT / "records" / "exchanges.jsonl"
 PAGE = Path(__file__).resolve().parent / "static" / "index.html"
+SUMMARY_PAGE = Path(__file__).resolve().parent / "static" / "summary.html"
 MAX_UPLOAD_BYTES = 10 * 1024 * 1024
 
 # What the stop tells Noor, for the label beside the spoken phrase.
@@ -200,6 +201,22 @@ class Pipeline:
             result["timings_s"] = t
             return result
 
+    def summary(self):
+        """Stage 3: counts over the local records file. Read-only; nothing is written."""
+        from src.app.summary import load_labels, load_records, summarize
+        with self.lock:
+            data = summarize(load_records(RECORDS), embedder=self.matcher.embedder,
+                             translate=self.mt.translate, triggers=self.triggers,
+                             threshold=self.threshold)
+        data["language"] = {"code": self.language.code, "name": self.language.name,
+                            "name_en": self.language.name_en}
+        data.update(load_labels(CONFIG / "ui_labels.yaml", self.language.code))
+        return data
+
+    def labels(self):
+        from src.app.summary import load_labels
+        return load_labels(CONFIG / "ui_labels.yaml", self.language.code)
+
     def _decode(self, data):
         from src.web.audio import decode_upload
         return decode_upload(data, self.sample_rate)
@@ -228,6 +245,21 @@ class Pipeline:
 @app.get("/")
 def page():
     return FileResponse(PAGE, headers={"Cache-Control": "no-store"})
+
+
+@app.get("/summary")
+def summary_page():
+    return FileResponse(SUMMARY_PAGE, headers={"Cache-Control": "no-store"})
+
+
+@app.get("/api/summary")
+async def summary():
+    return await run_in_threadpool(PIPE.summary)
+
+
+@app.get("/api/labels")
+def labels():
+    return PIPE.labels()
 
 
 @app.post("/api/start")

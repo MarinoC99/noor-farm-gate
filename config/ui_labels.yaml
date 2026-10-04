@@ -1,0 +1,40 @@
+# On-screen labels for Noor's pages (the summary). Shown, never spoken.
+#
+# en is the coder's English. es and sw need a speaker of the language: TODO(human).
+# A page shows the label in Noor's language when it is written, and English until then.
+
+labels:
+  title:              {en: "Summary", es: TODO(human), sw: TODO(human)}
+  visits:             {en: "Visits", es: TODO(human), sw: TODO(human)}
+  questions:          {en: "Questions", es: TODO(human), sw: TODO(human)}
+  includes_test:      {en: "includes test data", es: TODO(human), sw: TODO(human)}
+  gaps_title:         {en: "Asked, with no answer yet", es: TODO(human), sw: TODO(human)}
+  gaps_note:          {en: "Guest questions the tool could not answer, most asked first", es: TODO(human), sw: TODO(human)}
+  times:              {en: "times", es: TODO(human), sw: TODO(human)}
+  also_asked_as:      {en: "Also asked as", es: TODO(human), sw: TODO(human)}
+  machine_note:       {en: "Unchecked machine translation of the guest's question", es: TODO(human), sw: TODO(human)}
+  outcomes_title:     {en: "What happened to each question", es: TODO(human), sw: TODO(human)}
+  answered:           {en: "Answered from your answers", es: TODO(human), sw: TODO(human)}
+  handed_back:        {en: "You chose to answer yourself", es: TODO(human), sw: TODO(human)}
+  stopped_commitment: {en: "Stopped: date, money or safety", es: TODO(human), sw: TODO(human)}
+  stopped_known:      {en: "Stopped: known question, no answer yet", es: TODO(human), sw: TODO(human)}
+  stopped_weak:       {en: "Stopped: close to a known question", es: TODO(human), sw: TODO(human)}
+  stopped_unknown:    {en: "Stopped: new question", es: TODO(human), sw: TODO(human)}
+  reasons_title:      {en: "Why date, money or safety stopped", es: TODO(human), sw: TODO(human)}
+  intents_title:      {en: "Questions by topic", es: TODO(human), sw: TODO(human)}
+  commit_title:       {en: "Questions you always answer yourself", es: TODO(human), sw: TODO(human)}
+  commit_note:        {en: "Date, money and safety questions, most frequent first", es: TODO(human), sw: TODO(human)}
+  back:               {en: "Back", es: TODO(human), sw: TODO(human)}
+  open_summary:       {en: "Summary", es: TODO(human), sw: TODO(human)}
+  reason_money:       {en: "money", es: TODO(human), sw: TODO(human)}
+  reason_date:        {en: "date", es: TODO(human), sw: TODO(human)}
+  reason_safety:      {en: "safety", es: TODO(human), sw: TODO(human)}
+  reason_logistics:   {en: "logistics", es: TODO(human), sw: TODO(human)}
+  reason_general:     {en: "general", es: TODO(human), sw: TODO(human)}
+  reason_unknown:     {en: "unclassified", es: TODO(human), sw: TODO(human)}
+  intent_money:       {en: "money", es: TODO(human), sw: TODO(human)}
+  intent_logistics:   {en: "logistics", es: TODO(human), sw: TODO(human)}
+  intent_general:     {en: "general", es: TODO(human), sw: TODO(human)}
+  intent_safety:      {en: "safety", es: TODO(human), sw: TODO(human)}
+  intent_none:        {en: "no matching topic", es: TODO(human), sw: TODO(human)}
+  empty:              {en: "Nothing recorded yet", es: TODO(human), sw: TODO(human)}
