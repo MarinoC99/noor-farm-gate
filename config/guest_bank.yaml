@@ -366,6 +366,10 @@ entries:
       - "do you sell beans here"
       - "can we take some home"
       - "is any for sale"
+      # added 3 Oct at the team's request, so purchase questions reach the money stop
+      - "can I buy some beans to take home"
+      - "can I buy a bag to take with me"
+      - "could I get some coffee to take home"
     answer_en: TODO(human)
     answer_sw: TODO(human)
     answer_es: TODO(human)
