@@ -27,7 +27,7 @@ phrases:
   no_match:
     en: "I don't know this one."
     sw: "Sijui hili."
-    es: "No sé la respuesta de esta."
+    es: "No sé la respuesta."
     verified: {sw: false, es: true}
 
   money:
