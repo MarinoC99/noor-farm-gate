@@ -52,6 +52,10 @@
   .row.accent .bar i { background: var(--accent); }
   .row .sub { grid-column: 2; font-size: .95rem; color: var(--muted); }
   .empty { color: var(--muted); font-size: 1.05rem; margin-top: 12px; }
+  .status { font-size: 1.4rem; font-weight: 600; color: var(--ink-2); padding: 48px 0; }
+  .toggle { display: flex; align-items: center; gap: 12px; font-size: 1rem; font-weight: 600;
+            color: var(--ink-2); padding: 6px 0 2px; cursor: pointer; }
+  .toggle input { width: 26px; height: 26px; accent-color: var(--accent); }
 </style>
 </head>
 <body>
@@ -64,10 +68,13 @@
     <a class="back" href="/" id="back">Back</a>
   </header>
 
+  <p class="status" id="status"></p>
+  <div id="content" hidden>
   <div class="headline">
     <div><p class="big" id="visits">–</p><p class="big-label" id="visits-label">Visits</p></div>
     <div><p class="big" id="questions">–</p><p class="big-label" id="questions-label">Questions</p></div>
   </div>
+  <label class="toggle"><input type="checkbox" id="hide-test" checked> <span id="hide-test-label">Hide test data</span></label>
   <p class="test-note" id="test-note" hidden></p>
 
   <section>
@@ -97,6 +104,7 @@
     <h2 id="intents-title"></h2>
     <div class="rows" id="intents"></div>
   </section>
+  </div>
 </main>
 
 <script>
@@ -118,9 +126,29 @@ function rows(target, items, total, L) {
   }
 }
 
+const KEY = new URLSearchParams(location.search).get("key") || "";
+const withKey = (path) => path + (path.includes("?") ? "&" : "?") + "key=" + encodeURIComponent(KEY);
+let LABELS = null;
+
+async function labels() {
+  if (!LABELS) LABELS = (await (await fetch("/api/labels")).json()).labels;
+  return LABELS;
+}
+
 async function load() {
-  const d = await (await fetch("/api/summary")).json();
+  const L0 = await labels();
+  $("back").href = KEY ? withKey("/") : "/";
+  $("hide-test-label").textContent = L0.hide_test;
+  $("content").hidden = true;
+  $("status").hidden = false;
+  $("status").textContent = L0.loading;
+  const includeTest = !$("hide-test").checked;
+  const res = await fetch(withKey("/api/summary?include_test=" + (includeTest ? 1 : 0)));
+  if (res.status === 401) { $("status").textContent = L0.key_required; return; }
+  const d = await res.json();
   const L = d.labels;
+  $("status").hidden = true;
+  $("content").hidden = false;
   document.documentElement.lang = d.language.code;
   $("side").textContent = "Noor · " + d.language.name;
   for (const [id, key] of [["title", "title"], ["back", "back"], ["visits-label", "visits"], ["questions-label", "questions"],
@@ -131,7 +159,10 @@ async function load() {
   }
   $("visits").textContent = d.visits;
   $("questions").textContent = d.records;
-  if (d.test_records) { $("test-note").hidden = false; $("test-note").textContent = d.test_records + " / " + d.records + " · " + L.includes_test; }
+  $("test-note").hidden = !d.test_records_all;
+  $("test-note").textContent = d.include_test
+    ? d.test_records + " / " + d.records + " · " + L.includes_test
+    : d.test_records_all + " " + L.test_hidden;
 
   // The gap, most asked first.
   const gaps = $("gaps"); gaps.replaceChildren();
@@ -157,6 +188,7 @@ async function load() {
   rows($("commit"), d.commitment_entries.map(c => ({n: c.count, what: c.question_noor, sub: c.question_en + " · " + (L["reason_" + c.reason] || c.reason)})), totalCommit, L);
   rows($("intents"), Object.entries(d.intents).map(([k, n]) => ({n, what: L["intent_" + k] || k})), d.records, L);
 }
+$("hide-test").addEventListener("change", load);
 load();
 </script>
 </body>

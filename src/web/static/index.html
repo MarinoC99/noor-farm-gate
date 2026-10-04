@@ -366,6 +366,9 @@ $("start-btn").addEventListener("click", async () => {
 
 // The summary link speaks Noor's language once its label is written.
 fetch("/api/labels").then(r => r.json()).then(d => { $("summary-link").textContent = d.labels.open_summary; }).catch(() => {});
+// Noor's pages need the access key; it rides along if this page was opened with it.
+{ const key = new URLSearchParams(location.search).get("key");
+  if (key) $("summary-link").href = "/summary?key=" + encodeURIComponent(key); }
 
 // For testing without a microphone: window.debugAsk(blob) runs a recording through the same path.
 window.debugAsk = async (blob) => { state = "working"; try { await ask(blob); } finally { state = "idle"; } };

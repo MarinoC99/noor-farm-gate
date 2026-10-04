@@ -94,8 +94,11 @@ Responsible AI is a pass/fail criterion.
 - Records hold the question text, the intent and the timestamp. No names, no
   profiles, no guest identifiers.
 - No message content in logs, crash reports or telemetry.
-- The phone is shared with her daughter. The app opens to the summary view, never to
-  a conversation.
+- The phone is shared with her daughter. The app must never open into a past
+  conversation: it starts on a neutral screen that shows nothing anyone said. What
+  guests asked is visible only when someone chooses to look, on Noor's pages (the
+  summary, drafting and review), which need the access key. This is a privacy rule,
+  not a navigation one: the landing screen is Start.
 
 ---
 

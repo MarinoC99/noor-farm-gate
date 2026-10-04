@@ -26,6 +26,7 @@ again) is recorded as NOOR_BANK: it was handed back to Noor, not said.
                                      [--allow-unverified]
 """
 import argparse
+import secrets
 import socket
 import threading
 import time
@@ -35,7 +36,7 @@ from pathlib import Path
 import yaml
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.concurrency import run_in_threadpool
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, HTMLResponse
 
 from src.pipeline import offline
 
@@ -45,6 +46,36 @@ RECORDS = ROOT / "records" / "exchanges.jsonl"
 PAGE = Path(__file__).resolve().parent / "static" / "index.html"
 SUMMARY_PAGE = Path(__file__).resolve().parent / "static" / "summary.html"
 MAX_UPLOAD_BYTES = 10 * 1024 * 1024
+# Noor's pages (summary, drafting, review) show what guests asked, so they need a key.
+# Generated once, kept next to the records it protects, never committed (records/ is ignored).
+KEY_FILE = ROOT / "records" / "access_key.txt"
+ACCESS_KEY = None
+
+
+def load_access_key() -> str:
+    if KEY_FILE.exists() and KEY_FILE.read_text().strip():
+        return KEY_FILE.read_text().strip()
+    KEY_FILE.parent.mkdir(parents=True, exist_ok=True)
+    key = secrets.token_urlsafe(16)
+    KEY_FILE.write_text(key + "\n")
+    KEY_FILE.chmod(0o600)
+    return key
+
+
+def has_key(request: Request) -> bool:
+    given = request.query_params.get("key") or request.headers.get("x-access-key") or ""
+    return bool(ACCESS_KEY) and secrets.compare_digest(given.encode(), ACCESS_KEY.encode())
+
+
+def require_key(request: Request):
+    if not has_key(request):
+        raise HTTPException(401, "access key required")
+
+
+KEY_PAGE = """<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Key required</title><body style="font:20px/1.4 system-ui,sans-serif;padding:32px;max-width:640px">
+<h1 style="font-size:1.6rem">Access key required</h1>
+<p>This page shows what guests asked. Open it with the link that includes the key.</p></body>"""
 
 # What the stop tells Noor, for the label beside the spoken phrase.
 REASON_LABELS = {"money": "money", "date": "date", "safety": "safety",
@@ -201,13 +232,19 @@ class Pipeline:
             result["timings_s"] = t
             return result
 
-    def summary(self):
+    def summary(self, include_test: bool):
         """Stage 3: counts over the local records file. Read-only; nothing is written."""
         from src.app.summary import load_labels, load_records, summarize
         with self.lock:
-            data = summarize(load_records(RECORDS), embedder=self.matcher.embedder,
+            records = load_records(RECORDS)
+            test_total = sum(1 for r in records if r.get("test_data") is True)
+            shown = records if include_test else [r for r in records if r.get("test_data") is not True]
+            data = summarize(shown, embedder=self.matcher.embedder,
                              translate=self.mt.translate, triggers=self.triggers,
                              threshold=self.threshold)
+        data["include_test"] = include_test
+        data["test_records_all"] = test_total
+        data["records_all"] = len(records)
         data["language"] = {"code": self.language.code, "name": self.language.name,
                             "name_en": self.language.name_en}
         data.update(load_labels(CONFIG / "ui_labels.yaml", self.language.code))
@@ -248,13 +285,17 @@ def page():
 
 
 @app.get("/summary")
-def summary_page():
+def summary_page(request: Request):
+    if not has_key(request):
+        return HTMLResponse(KEY_PAGE, status_code=401)
     return FileResponse(SUMMARY_PAGE, headers={"Cache-Control": "no-store"})
 
 
 @app.get("/api/summary")
-async def summary():
-    return await run_in_threadpool(PIPE.summary)
+async def summary(request: Request):
+    require_key(request)
+    include_test = request.query_params.get("include_test") == "1"
+    return await run_in_threadpool(PIPE.summary, include_test)
 
 
 @app.get("/api/labels")
@@ -290,7 +331,7 @@ async def decline(request: Request):
 
 
 def main():
-    global PIPE
+    global PIPE, ACCESS_KEY
     import uvicorn
 
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
@@ -321,8 +362,10 @@ def main():
     if PIPE.noor_unverified and args.allow_unverified:
         print(f"--allow-unverified: ON. Unverified {setup.language.name_en} will be spoken to "
               "Noor, each line with a warning; the page shows a banner.", flush=True)
+    ACCESS_KEY = load_access_key()
     print(f"ready: http://localhost:{args.port}  (bound to {args.host}; models local, network blocked)",
           flush=True)
+    print(f"Noor's pages need the key: http://localhost:{args.port}/summary?key={ACCESS_KEY}", flush=True)
     uvicorn.Server(uvicorn.Config(app, log_level="info")).run(sockets=[sock])
 
 

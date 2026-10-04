@@ -180,8 +180,9 @@ Audio is transcribed and discarded. Never written to disk.
 - Records hold the question, the intent and the timestamp. No names, no profiles, no
   guest identifiers.
 - No message content in logs or crash reports.
-- The phone is shared with her daughter. The app opens to the summary view, never to
-  a conversation.
+- The phone is shared with her daughter. The app never opens into a past conversation:
+  it starts on a neutral screen, and what guests asked is shown only on Noor's pages
+  (summary, drafting, review), which need an access key.
 
 ## Interface
 

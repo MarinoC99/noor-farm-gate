@@ -251,6 +251,20 @@ stopped. It refused rather than guessed.
 Both runs used synthetic speech from the macOS `say` command, not a person. How often
 this happens with real guests in a field is unmeasured. TODO(measure).
 
+## The summary puts unchecked translations in front of Noor
+
+The summary page shows Noor what guests asked that the tool could not answer, in her
+language. Those questions are machine-translated, the same inbound path nobody checks,
+and some of the translations are poor: "frijoles" for coffee beans ("can I buy some
+beans to take home"), "¿Qué más creces?" for "what else do you grow". The page labels
+them as unchecked machine translation and shows the guest's English underneath, but
+the inbound gap now appears on her own analytics screen, not only in conversation.
+
+The grouping of those questions is approximate. It groups by meaning with the same
+model and threshold the tool uses to match questions, and in our test data it merged
+"how high is the farm" into "how big is your farm" while keeping "is there wifi here"
+apart from "do you have wifi". The counts per group are only as good as that grouping.
+
 ## Match scores used to move whenever the bank changed (fixed)
 
 The matcher's 8-bit embedding model scales its numbers across whatever batch of

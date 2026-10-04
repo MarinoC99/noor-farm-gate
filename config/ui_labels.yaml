@@ -38,3 +38,7 @@ labels:
   intent_safety:      {en: "safety", es: TODO(human), sw: TODO(human)}
   intent_none:        {en: "no matching topic", es: TODO(human), sw: TODO(human)}
   empty:              {en: "Nothing recorded yet", es: TODO(human), sw: TODO(human)}
+  loading:            {en: "Counting what guests asked…", es: TODO(human), sw: TODO(human)}
+  hide_test:          {en: "Hide test data", es: TODO(human), sw: TODO(human)}
+  test_hidden:        {en: "test records hidden", es: TODO(human), sw: TODO(human)}
+  key_required:       {en: "This page needs its access key. Open it with the full link.", es: TODO(human), sw: TODO(human)}
