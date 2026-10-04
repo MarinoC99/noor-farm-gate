@@ -26,16 +26,22 @@ def load_records(path: Path) -> list:
 
 
 def load_labels(path: Path, code: str) -> dict:
-    raw = (yaml.safe_load(path.read_text(encoding="utf-8")) or {}).get("labels") or {}
-    out, missing = {}, 0
+    """Interface labels in Noor's language, English where hers is not written yet.
+    labels_verified is False when any label shown is in a language the file does not
+    mark verified (the file-level `verified` map); the pages then say so in small text."""
+    doc = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+    raw = doc.get("labels") or {}
+    out, missing, shown_in_code = {}, 0, 0
     for key, node in raw.items():
         text = (node or {}).get(code)
         if is_written(text):
             out[key] = text
+            shown_in_code += 1
         else:
             out[key] = (node or {}).get("en", key)
             missing += 1
-    return {"labels": out, "untranslated": missing}
+    verified = code == "en" or shown_in_code == 0 or (doc.get("verified") or {}).get(code) is True
+    return {"labels": out, "untranslated": missing, "labels_verified": verified}
 
 
 def _norm(text: str) -> str:
@@ -108,6 +114,7 @@ def summarize(records, *, embedder, translate, triggers, threshold) -> dict:
         members = [r for n in g["members"] for r in by_norm[n]]
         nearest = Counter(r.get("matched_entry_id") for r in members if r.get("matched_entry_id"))
         gaps.append({
+            "transcripts": sorted({r["raw_transcript_en"].strip() for r in members}),
             "question_en": g["question_en"],
             "question_noor": noor(g["question_en"]),
             "count": g["count"],

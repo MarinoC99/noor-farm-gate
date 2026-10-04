@@ -256,7 +256,8 @@ this happens with real guests in a field is unmeasured. TODO(measure).
 The summary page shows Noor what guests asked that the tool could not answer, in her
 language. Those questions are machine-translated, the same inbound path nobody checks,
 and some of the translations are poor: "frijoles" for coffee beans ("can I buy some
-beans to take home"), "¿Qué más creces?" for "what else do you grow". The page labels
+beans to take home"), "¿Qué más creces?" for "what else do you grow", "¿Podemos ver
+el asado" (asado is a barbecue) for "can we see the roasting". The page labels
 them as unchecked machine translation and shows the guest's English underneath, but
 the inbound gap now appears on her own analytics screen, not only in conversation.
 
@@ -264,6 +265,17 @@ The grouping of those questions is approximate. It groups by meaning with the sa
 model and threshold the tool uses to match questions, and in our test data it merged
 "how high is the farm" into "how big is your farm" while keeping "is there wifi here"
 apart from "do you have wifi". The counts per group are only as good as that grouping.
+
+The page's own Spanish is not checked either. The interface labels on the summary and
+review pages (headings, buttons, "Asked, with no answer yet") were machine-translated
+by the coding agent and have not been read by a Spanish speaker. They are never spoken,
+so they sit outside rule 2, and `config/ui_labels.yaml` marks them `verified: {es: false}`.
+Each page says so in a line of small text at the foot. A mistranslated label could still
+make Noor misread her own screen, which is why they need the same review as the answers.
+A model-run meaning check caught one such case before anyone saw it: the rows counting
+questions the tool handed to Noor began "Se detuvo", which is how Android's Spanish
+crash dialog says an app has stopped. They now read "Te la dejó a ti" ("it left it to
+you"). That check was a model checking a model, not a Spanish speaker.
 
 ## Match scores used to move whenever the bank changed (fixed)
 

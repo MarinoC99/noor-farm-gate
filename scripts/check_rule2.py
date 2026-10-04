@@ -18,8 +18,24 @@ With --allow-unverified's setting on:
   6. an unverified English answer still raises: nothing unverified goes outward to a
      guest, in any mode.
 
+Pending entries (Noor's drafts, records/pending_entries.json; Stage 3), using the real
+src/app/drafts.py on a synthetic draft in each pending state plus any real queue:
+  7. a new draft is unverified in both languages, has no English and an unknown
+     commitment flag, and is built only from transcripts that got no answer; review
+     cannot verify an empty answer. Every unverified line of a pending draft raises on
+     both paths without the flag (review can remove a guest question, never add one),
+     and its unverified English raises with it;
+  8. a pending draft routed as a perfect match never reaches BANK without the flag;
+  9. no pending draft is ever loaded into what is matched and spoken: no draft id is in
+     the guest bank for any language, only src/web/server.py touches the queue, and the
+     server code that does never reaches the Speaker, the router or the matcher's
+     entries. This is the layer that holds under --allow-unverified, where the guard
+     relaxes Noor's side by design; the check prints what 7 and 8 alone would allow.
+
 Exits 1 on any failure. Usage: .venv/bin/python scripts/check_rule2.py
 """
+import ast
+import copy
 import logging
 import sys
 from pathlib import Path
@@ -30,6 +46,7 @@ import yaml
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
+from src.app import drafts as D  # noqa: E402
 from src.pipeline import language  # noqa: E402
 from src.pipeline.bank import StopPhrases, load_guest_bank  # noqa: E402
 from src.pipeline.route import BANK, Match, Triggers, decide  # noqa: E402
@@ -37,6 +54,12 @@ from src.pipeline.speech import Rule2Violation, Speaker  # noqa: E402
 from src.web.audio import WebSpeaker  # noqa: E402
 
 CONFIG = ROOT / "config"
+PENDING = ROOT / "records" / "pending_entries.json"
+
+# A synthetic gap record and draft for 7-9. Test fixtures, never saved or shown: the
+# answer is a marker string, not text in any language.
+SYNTHETIC_Q = "synthetic guest question for scripts/check_rule2.py"
+SYNTHETIC_A = "synthetic draft answer for scripts/check_rule2.py, never spoken"
 
 
 class SilentVoice:
@@ -146,6 +169,193 @@ def check_language(code, triggers, threshold, floor, failures):
           f"spoken with one warning each, {outward_refused} unverified English lines still refused")
 
 
+def pending_drafts(code):
+    """(label, draft) for each pending state, made by the real drafts module, plus every
+    real queued draft in this language that is still pending."""
+    records = [{"route": "NO_MATCH", "raw_transcript_en": SYNTHETIC_Q, "test_data": True}]
+    fresh = D.new_draft(paraphrases=[SYNTHETIC_Q], answer_noor=SYNTHETIC_A, lang=code, records=records)
+    out = [("synthetic draft as created", fresh)]
+    for en_ok, noor_ok in ((True, False), (False, True), (False, False)):
+        d = D.review(copy.deepcopy(fresh), answer_en=SYNTHETIC_A, commitment=False, intent="general",
+                     verified={"en": en_ok, code: noor_ok})
+        out.append((f"synthetic draft reviewed, not a commitment, en verified={en_ok}, "
+                    f"{code} verified={noor_ok}", d))
+    for d in D.load(PENDING):
+        v = d.get("verified") or {}
+        if code in v and not all(v.values()):
+            out.append((f"queued draft {d['id']}", d))
+    return out
+
+
+def check_creation(code, failures):
+    """What "pending" means, asserted on the real module: a new draft is unverified in both
+    languages, has no English, is not known to be safe from commitments, and is built only
+    from questions guests actually asked that got no answer."""
+    records = [{"route": "NO_MATCH", "raw_transcript_en": SYNTHETIC_Q, "test_data": True},
+               {"route": "BANK", "raw_transcript_en": "an answered question", "test_data": True}]
+    d = D.new_draft(paraphrases=[SYNTHETIC_Q], answer_noor=SYNTHETIC_A, lang=code, records=records)
+    if d["verified"] != {code: False, "en": False}:
+        failures.append(f"[{code}] a new draft is created with verified {d['verified']}")
+    if d["answer_en"] != "":
+        failures.append(f"[{code}] a new draft is created with English text")
+    if d["commitment"] is not None or d["status"] != "pending":
+        failures.append(f"[{code}] a new draft is created with commitment {d['commitment']!r}, "
+                        f"status {d['status']!r}")
+    for bad in (["a question nobody asked"], ["an answered question"]):
+        try:
+            D.new_draft(paraphrases=bad, answer_noor=SYNTHETIC_A, lang=code, records=records)
+            failures.append(f"[{code}] a draft was built from {bad[0]!r}, not a failed guest question")
+        except ValueError:
+            pass
+        except Exception as e:  # anything but a clean refusal means the check was skipped
+            failures.append(f"[{code}] a draft from {bad[0]!r} was not refused cleanly: {e!r}")
+    r = D.review(copy.deepcopy(d), answer_en="", commitment=False, intent=None,
+                 verified={"en": True, code: True})
+    if r["verified"]["en"] or r["status"] != "pending":
+        failures.append(f"[{code}] review verified an empty English answer")
+    r = D.review(copy.deepcopy(d), answer_en="", commitment=None, intent=None, verified={},
+                 paraphrases=[SYNTHETIC_Q, "a question nobody asked"])
+    if r["paraphrases_en"] != [SYNTHETIC_Q]:
+        failures.append(f"[{code}] review added a guest question: {r['paraphrases_en']}")
+    try:
+        D.review(copy.deepcopy(d), answer_en="", commitment=None, intent=None, verified={},
+                 paraphrases=[])
+        failures.append(f"[{code}] review left a draft with no guest question")
+    except ValueError:
+        pass
+
+
+def check_pending(code, triggers, threshold, floor, failures):
+    check_creation(code, failures)
+    drafts = pending_drafts(code)
+    strict = {"terminal": Speaker(voices(), play=False).say, "web": WebSpeaker(voices()).say}
+    flagged = {"terminal": Speaker(voices(), play=False, allow_unverified=True).say,
+               "web": WebSpeaker(voices(), allow_unverified=True).say}
+    refused = 0
+    flag_only_layer9 = []
+    speech_log = logging.getLogger("src.pipeline.speech")
+    speech_log.disabled = True   # the flag path logs warnings by design; 5 checks those
+    try:
+        for label, d in drafts:
+            e = D.as_entry(d, code)
+            lines = (("bank_answer_en", e.answer_en), ("bank_answer_noor", e.answer_noor))
+            # 7. The guard.
+            for path, say in strict.items():
+                for source, line in lines:
+                    if line.verified:
+                        continue
+                    try:
+                        say(source, line)
+                        failures.append(f"[{code}/{path}] pending: spoke {line.origin} ({label})")
+                    except Rule2Violation:
+                        refused += 1
+            for path, say in flagged.items():
+                if not e.answer_en.verified:
+                    try:
+                        say("bank_answer_en", e.answer_en)
+                        failures.append(f"[{code}/{path}+flag] pending: spoke unverified English "
+                                        f"{e.answer_en.origin} to the guest ({label})")
+                    except Rule2Violation:
+                        refused += 1
+            # 8. Routing, as a perfect match with its own trigger words.
+            for p in e.paraphrases:
+                d8 = decide([Match(e, 1.0, p)], threshold, triggers.find(p), floor)
+                if d8.route == BANK:
+                    failures.append(f"[{code}] pending {d['id']}: {p!r} routes to BANK ({label})")
+                if decide([Match(e, 1.0, p)], threshold, triggers.find(p), floor,
+                          allow_unverified=True).route == BANK:
+                    flag_only_layer9.append(label)
+    finally:
+        speech_log.disabled = False
+    # 9, per language: no draft is in the bank this language loads.
+    bank_ids = {e.id for e in load_guest_bank(CONFIG / "guest_bank.yaml", code)}
+    queued_ids = {d["id"] for d in D.load(PENDING)}
+    for i in sorted(bank_ids & queued_ids):
+        failures.append(f"[{code}] draft {i} is in guest_bank.yaml")
+    for i in sorted(b for b in bank_ids if b.startswith("pending-")):
+        failures.append(f"[{code}] guest_bank.yaml has a draft-shaped id {i}")
+    print(f"[{code}] pending drafts checked {len(drafts)} ({len(drafts) - 4} queued): "
+          f"{refused} unverified draft lines refused across both paths; none reach BANK "
+          f"without the flag")
+    for label in dict.fromkeys(flag_only_layer9):
+        print(f"[{code}]   note: with --allow-unverified, the guard and router alone would let "
+              f"this through if it were ever loaded: {label}. Check 9 is what stops it.")
+
+
+def _names(node):
+    """Every bare name and attribute name used inside a node."""
+    out = set()
+    for n in ast.walk(node):
+        if isinstance(n, ast.Name):
+            out.add(n.id)
+        elif isinstance(n, ast.Attribute):
+            out.add(n.attr)
+    return out
+
+
+def check_isolation(failures):
+    """9. Static: the queue never meets the speaking path. Catches anyone wiring
+    src/app/drafts.py or records/pending_entries.json into the matcher, router or
+    Speaker in this repo's source; it cannot rule out a path built at runtime."""
+    allowed = {"src/app/drafts.py", "src/web/server.py"}
+    for py in sorted((ROOT / "src").rglob("*.py")):
+        rel = py.relative_to(ROOT).as_posix()
+        if rel in allowed:
+            continue
+        tree = ast.parse(py.read_text(encoding="utf-8"))
+        text = py.read_text(encoding="utf-8")
+        imports = any((isinstance(n, ast.ImportFrom) and n.module and
+                       (n.module.endswith("drafts") or any(a.name == "drafts" for a in n.names)))
+                      or (isinstance(n, ast.Import) and any(a.name.endswith("drafts") for a in n.names))
+                      for n in ast.walk(tree))
+        if imports or "pending_entries" in text or "as_entry" in text:
+            failures.append(f"[isolation] {rel} touches the drafting queue")
+    server_src = (ROOT / "src/web/server.py").read_text(encoding="utf-8")
+    server = ast.parse(server_src)
+    if "as_entry" in server_src:
+        failures.append("[isolation] src/web/server.py uses drafts.as_entry, which exists only for this check")
+
+    # Every name a drafts import binds, at any level, under any alias.
+    def drafts_imports(node):
+        for n in ast.walk(node):
+            if isinstance(n, ast.ImportFrom) and n.module:
+                if n.module.endswith("drafts"):
+                    yield from (a.asname or a.name for a in n.names)
+                else:
+                    yield from (a.asname or a.name for a in n.names if a.name == "drafts")
+            elif isinstance(n, ast.Import):
+                yield from (a.asname or a.name.split(".")[0] for a in n.names if a.name.endswith("drafts"))
+    aliases = set(drafts_imports(server)) | {"PENDING"}
+    functions = [fn for fn in ast.walk(server) if isinstance(fn, (ast.FunctionDef, ast.AsyncFunctionDef))]
+
+    def reads_queue_directly(fn):
+        return bool(_names(fn) & aliases) or any(True for _ in drafts_imports(fn)) or any(
+            isinstance(n, ast.Constant) and isinstance(n.value, str) and "pending_entries" in n.value
+            for n in ast.walk(fn))
+    touching = {fn.name for fn in functions if reads_queue_directly(fn)}
+    while True:   # a function that calls one that reads the queue reads it too
+        more = {fn.name for fn in functions if fn.name not in touching and _names(fn) & touching}
+        if not more:
+            break
+        touching |= more
+    speaking = {"say", "decide", "Matcher", "rank", "entries", "as_entry", "speaker"}
+    for fn in functions:
+        if fn.name in touching and speaking & _names(fn):
+            failures.append(f"[isolation] src/web/server.py:{fn.lineno} {fn.name} reads the queue "
+                            f"and uses {', '.join(sorted(speaking & _names(fn)))}")
+    # Module-level statements (outside any def or class) are checked the same way.
+    for stmt in server.body:
+        if isinstance(stmt, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef, ast.Import, ast.ImportFrom)):
+            continue
+        names = _names(stmt)
+        if (names & (aliases | touching)) and (speaking & names):
+            failures.append(f"[isolation] src/web/server.py:{stmt.lineno} module code reads the queue "
+                            f"and uses {', '.join(sorted(speaking & names))}")
+    touching = len(touching)
+    print(f"[isolation] src/: only src/web/server.py reads the queue; its {touching} functions "
+          "that do never use the Speaker, the router or the matcher's entries")
+
+
 def main():
     triggers = Triggers(CONFIG / "commitment_triggers.yaml")
     matching = yaml.safe_load((CONFIG / "matching.yaml").read_text())
@@ -155,6 +365,8 @@ def main():
     failures = []
     for code in language.available(ROOT):
         check_language(code, triggers, threshold, floor, failures)
+        check_pending(code, triggers, threshold, floor, failures)
+    check_isolation(failures)
     if failures:
         print("FAIL")
         for f in failures:
@@ -162,7 +374,8 @@ def main():
         return 1
     print("PASS: without the flag nothing unverified can be spoken, in the terminal or web path, "
           "and only verified entries reach BANK; with it, every unverified line spoken logs a "
-          "warning, and nothing unverified reaches the guest in either mode")
+          "warning, and nothing unverified reaches the guest in either mode. Pending drafts "
+          "are refused by the guard, never reach BANK, and are never loaded to be spoken")
     return 0
 
 

@@ -26,6 +26,8 @@ again) is recorded as NOOR_BANK: it was handed back to Noor, not said.
                                      [--allow-unverified]
 """
 import argparse
+import logging
+import re
 import secrets
 import socket
 import threading
@@ -45,6 +47,8 @@ CONFIG = ROOT / "config"
 RECORDS = ROOT / "records" / "exchanges.jsonl"
 PAGE = Path(__file__).resolve().parent / "static" / "index.html"
 SUMMARY_PAGE = Path(__file__).resolve().parent / "static" / "summary.html"
+REVIEW_PAGE = Path(__file__).resolve().parent / "static" / "review.html"
+PENDING = ROOT / "records" / "pending_entries.json"
 MAX_UPLOAD_BYTES = 10 * 1024 * 1024
 # Noor's pages (summary, drafting, review) show what guests asked, so they need a key.
 # Generated once, kept next to the records it protects, never committed (records/ is ignored).
@@ -70,6 +74,16 @@ def has_key(request: Request) -> bool:
 def require_key(request: Request):
     if not has_key(request):
         raise HTTPException(401, "access key required")
+
+
+class RedactKey(logging.Filter):
+    """The access log prints each request's path, and the key travels in the query string."""
+
+    def filter(self, record):
+        if isinstance(record.args, tuple):
+            record.args = tuple(re.sub(r"key=[^&\s]*", "key=REDACTED", a) if isinstance(a, str) else a
+                                for a in record.args)
+        return True
 
 
 KEY_PAGE = """<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
@@ -242,6 +256,17 @@ class Pipeline:
             data = summarize(shown, embedder=self.matcher.embedder,
                              translate=self.mt.translate, triggers=self.triggers,
                              threshold=self.threshold)
+        # Mark groups that already have a draft waiting, so Noor doesn't answer twice.
+        from src.app import drafts as D
+        code = self.language.code
+        try:
+            queue, data["queue_error"] = D.load(PENDING), None
+        except D.QueueUnreadable as e:
+            queue, data["queue_error"] = [], str(e)
+        waiting = {p: d["id"] for d in queue if D.language_of(d) == code
+                   for p in d["paraphrases_en"]}
+        for g in data["gaps"]:
+            g["pending_id"] = next((waiting[t] for t in g["transcripts"] if t in waiting), None)
         data["include_test"] = include_test
         data["test_records_all"] = test_total
         data["records_all"] = len(records)
@@ -249,6 +274,78 @@ class Pipeline:
                             "name_en": self.language.name_en}
         data.update(load_labels(CONFIG / "ui_labels.yaml", self.language.code))
         return data
+
+    # -- drafting queue (Stage 3). Writes only records/pending_entries.json; never the bank.
+
+    def drafts(self):
+        """Drafts written in the language this server runs. A draft in another language is
+        reviewed by a server started with that language, so its flags are never touched here."""
+        from src.app import drafts as D
+        code = self.language.code
+        with self.lock:
+            everything = self._queue()
+            mine = [d for d in everything if D.language_of(d) == code]
+            return {"drafts": mine, "other_languages": len(everything) - len(mine),
+                    "language": {"code": code, "name": self.language.name,
+                                 "name_en": self.language.name_en}}
+
+    @staticmethod
+    def _queue():
+        from src.app import drafts as D
+        try:
+            return D.load(PENDING)
+        except D.QueueUnreadable as e:
+            raise HTTPException(503, f"{e}. Nothing was changed; fix or move the file.")
+
+    def _own_draft(self, drafts, draft_id):
+        from src.app import drafts as D
+        draft = next((d for d in drafts if d["id"] == draft_id), None)
+        if draft is None:
+            raise HTTPException(404, "no such draft")
+        if D.language_of(draft) != self.language.code:
+            raise HTTPException(409, f"draft written in {D.language_of(draft)}; review it with "
+                                     "the server started in that language")
+        return draft
+
+    def draft_create(self, paraphrases, answer):
+        from src.app import drafts as D
+        from src.app.summary import load_records
+        with self.lock:
+            try:
+                draft = D.new_draft(paraphrases=paraphrases, answer_noor=answer,
+                                    lang=self.language.code, records=load_records(RECORDS))
+            except ValueError as e:
+                raise HTTPException(400, str(e))
+            drafts = self._queue()
+            taken = {p for d in drafts if D.language_of(d) == self.language.code
+                     for p in d["paraphrases_en"]}
+            if taken & set(draft["paraphrases_en"]):
+                raise HTTPException(409, "an answer to this question is already waiting for review")
+            drafts.append(draft)
+            D.save(PENDING, drafts)
+            return draft
+
+    def draft_review(self, draft_id, body):
+        from src.app import drafts as D
+        with self.lock:
+            drafts = self._queue()
+            draft = self._own_draft(drafts, draft_id)
+            try:
+                D.review(draft, answer_en=body.get("answer_en", ""), commitment=body.get("commitment"),
+                         intent=body.get("intent"), verified=body.get("verified", {}),
+                         paraphrases=body.get("paraphrases"))
+            except ValueError as e:
+                raise HTTPException(400, str(e))
+            D.save(PENDING, drafts)
+            return draft
+
+    def draft_discard(self, draft_id):
+        from src.app import drafts as D
+        with self.lock:
+            drafts = self._queue()
+            self._own_draft(drafts, draft_id)
+            D.save(PENDING, [d for d in drafts if d["id"] != draft_id])
+            return {"discarded": draft_id}
 
     def labels(self):
         from src.app.summary import load_labels
@@ -296,6 +393,49 @@ async def summary(request: Request):
     require_key(request)
     include_test = request.query_params.get("include_test") == "1"
     return await run_in_threadpool(PIPE.summary, include_test)
+
+
+@app.get("/review")
+def review_page(request: Request):
+    if not has_key(request):
+        return HTMLResponse(KEY_PAGE, status_code=401)
+    return FileResponse(REVIEW_PAGE, headers={"Cache-Control": "no-store"})
+
+
+@app.get("/api/drafts")
+async def drafts_list(request: Request):
+    require_key(request)
+    return await run_in_threadpool(PIPE.drafts)
+
+
+async def json_object(request: Request) -> dict:
+    try:
+        body = await request.json()
+    except ValueError:
+        raise HTTPException(400, "the request body is not JSON")
+    if not isinstance(body, dict):
+        raise HTTPException(400, "the request body must be a JSON object")
+    return body
+
+
+@app.post("/api/drafts")
+async def drafts_create(request: Request):
+    require_key(request)
+    body = await json_object(request)
+    return await run_in_threadpool(PIPE.draft_create, body.get("paraphrases", []), body.get("answer", ""))
+
+
+@app.post("/api/drafts/{draft_id}")
+async def drafts_review(draft_id: str, request: Request):
+    require_key(request)
+    body = await json_object(request)
+    return await run_in_threadpool(PIPE.draft_review, draft_id, body)
+
+
+@app.post("/api/drafts/{draft_id}/discard")
+async def drafts_discard(draft_id: str, request: Request):
+    require_key(request)
+    return await run_in_threadpool(PIPE.draft_discard, draft_id)
 
 
 @app.get("/api/labels")
@@ -366,7 +506,9 @@ def main():
     print(f"ready: http://localhost:{args.port}  (bound to {args.host}; models local, network blocked)",
           flush=True)
     print(f"Noor's pages need the key: http://localhost:{args.port}/summary?key={ACCESS_KEY}", flush=True)
-    uvicorn.Server(uvicorn.Config(app, log_level="info")).run(sockets=[sock])
+    config = uvicorn.Config(app, log_level="info")   # configures uvicorn's loggers
+    logging.getLogger("uvicorn.access").addFilter(RedactKey())
+    uvicorn.Server(config).run(sockets=[sock])
 
 
 if __name__ == "__main__":
