@@ -272,10 +272,35 @@ by the coding agent and have not been read by a Spanish speaker. They are never 
 so they sit outside rule 2, and `config/ui_labels.yaml` marks them `verified: {es: false}`.
 Each page says so in a line of small text at the foot. A mistranslated label could still
 make Noor misread her own screen, which is why they need the same review as the answers.
-A model-run meaning check caught one such case before anyone saw it: the rows counting
-questions the tool handed to Noor began "Se detuvo", which is how Android's Spanish
-crash dialog says an app has stopped. They now read "Te la dejó a ti" ("it left it to
-you"). That check was a model checking a model, not a Spanish speaker.
+
+## The Spanish interface labels were checked by a model, not a person
+
+After machine-translating the labels, we had them checked for meaning by further model
+passes: a blind back-translation, a pass asking whether Noor could misread each label
+next to its count, and a register pass, with each flag judged three times. No Spanish
+speaker read them.
+
+It caught one real problem. The rows counting questions the tool handed to Noor began
+"Se detuvo", which is how Android's Spanish crash dialog says an app has stopped. A
+count of unanswered questions could have read as the app crashing. Those rows now read
+"Te la dejó a ti" in Spanish and "Handed to you" in English.
+
+Machine review catches some drift. It did not catch what our human reviewers caught on
+`social_media` and `cooperative` (see "What the review caught"), where the two languages
+said different things and each read naturally on its own. Both kinds of review are
+worth having, and neither substitutes for the other.
+
+## A reviewed draft stops at the queue
+
+Noor's drafted answers, and her daughter's weekend review of them, live in
+`records/pending_entries.json`, not in `guest_bank.yaml`. The review ends with a
+verified draft still in that queue. Promoting it into the bank, where the tool can
+speak it, is the next step, and we have not built it. Until someone builds it, a
+reviewed answer reaches guests only if a person copies it into `guest_bank.yaml` by
+hand, with its verified flags. Nothing in the tool speaks a draft: the Speaker refuses
+any line from the drafts file in every mode, including `--allow-unverified`, and
+`scripts/check_rule2.py` checks that separately from checking that drafts are never
+loaded.
 
 ## Match scores used to move whenever the bank changed (fixed)
 

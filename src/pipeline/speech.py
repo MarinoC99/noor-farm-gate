@@ -15,6 +15,10 @@ Each utterance names where its text came from. The allowed sources are fixed:
 File sources must be a Line marked verified for its language. Anything else raises
 Rule2Violation: a bug in routing, never something to recover from.
 
+A line from Noor's drafting queue (records/pending_entries.json, origin starting
+QUEUE_ORIGIN) is refused in every mode, verified or not, --allow-unverified or not.
+Drafts are never loaded into the bank; this makes the guard hold even if one were.
+
 A Speaker built with allow_unverified=True (the --allow-unverified flag, off by
 default) speaks unverified Noor-language lines and logs a warning naming each line's
 origin, never its text. It never relaxes bank_answer_en: nothing unverified goes
@@ -37,6 +41,7 @@ SOURCES = {
 }
 FILE_SOURCES = {"bank_answer_noor", "stop_phrase", "bank_answer_en"}
 OUTWARD = {"bank_answer_en"}   # reaches the guest: verified in every mode
+QUEUE_ORIGIN = "pending_entries.json:"   # drafts: never spoken, in any mode
 log = logging.getLogger(__name__)
 
 
@@ -70,6 +75,8 @@ class Speaker:
                 return Spoken(source, voice_key, None, spoken=False, refused="no such phrase")
             if not isinstance(line, Line):
                 raise Rule2Violation(f"{source} needs a Line from a bank file, got {type(line).__name__}")
+            if line.origin.startswith(QUEUE_ORIGIN):
+                raise Rule2Violation(f"refusing to speak {line.origin}: a draft is never spoken")
             if not line.verified and (source in OUTWARD or not self.allow_unverified):
                 raise Rule2Violation(f"refusing to speak {line.origin}: not verified"
                                      + (" (goes to the guest)" if source in OUTWARD else ""))

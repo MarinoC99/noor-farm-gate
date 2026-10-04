@@ -2,8 +2,8 @@
 
 A draft is a PENDING entry, bank-shaped, kept in records/pending_entries.json (git-
 ignored: it holds real guest wording). It is never written into guest_bank.yaml, so the
-matcher and the Speaker never load it, and its verified flags start false, so the
-Speaker's guard would refuse it anyway. No exception to either is added here.
+matcher and the Speaker never load it, and the Speaker refuses any line whose origin
+is this file, in every mode, verified or not. No exception to either is added here.
 
 - paraphrases_en come only from transcripts guests actually said that came back
   NO_MATCH or WEAK_MATCH: the bank learns the words guests really used. Anything else
@@ -21,6 +21,7 @@ from pathlib import Path
 from typing import Optional
 
 from src.pipeline.bank import INTENTS, Entry, Line, is_written
+from src.pipeline.speech import QUEUE_ORIGIN
 
 MAX_ANSWER_CHARS = 400
 
@@ -147,8 +148,8 @@ def as_entry(draft: dict, lang: str) -> Entry:
         commitment_flag=draft.get("commitment"),
         paraphrases=tuple(draft.get("paraphrases_en") or ()),
         answer_en=Line(draft.get("answer_en") if is_written(draft.get("answer_en")) else None,
-                       v.get("en") is True, f"pending_entries.json:{draft['id']}.answer_en"),
+                       v.get("en") is True, f"{QUEUE_ORIGIN}{draft['id']}.answer_en"),
         answer_noor=Line(draft.get(f"answer_{lang}") if is_written(draft.get(f"answer_{lang}")) else None,
-                         v.get(lang) is True, f"pending_entries.json:{draft['id']}.answer_{lang}"),
+                         v.get(lang) is True, f"{QUEUE_ORIGIN}{draft['id']}.answer_{lang}"),
         noor_language=lang,
     )

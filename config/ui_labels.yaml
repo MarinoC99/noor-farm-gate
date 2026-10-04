@@ -26,10 +26,10 @@ labels:
   outcomes_title:     {en: "What happened to each question", es: "Qué pasó con cada pregunta", sw: TODO(human)}
   answered:           {en: "Answered from your answers", es: "Respondida con tus respuestas", sw: TODO(human)}
   handed_back:        {en: "You chose to answer yourself", es: "Elegiste responder tú misma", sw: TODO(human)}
-  stopped_commitment: {en: "Stopped: date, money or safety", es: "Te la dejó a ti: fecha, dinero o seguridad", sw: TODO(human)}
-  stopped_known:      {en: "Stopped: known question, no answer yet", es: "Te la dejó a ti: pregunta conocida, aún sin respuesta", sw: TODO(human)}
-  stopped_weak:       {en: "Stopped: close to a known question", es: "Te la dejó a ti: parecida a una pregunta conocida", sw: TODO(human)}
-  stopped_unknown:    {en: "Stopped: new question", es: "Te la dejó a ti: pregunta nueva", sw: TODO(human)}
+  stopped_commitment: {en: "Handed to you: date, money or safety", es: "Te la dejó a ti: fecha, dinero o seguridad", sw: TODO(human)}
+  stopped_known:      {en: "Handed to you: known question, no answer yet", es: "Te la dejó a ti: pregunta conocida, aún sin respuesta", sw: TODO(human)}
+  stopped_weak:       {en: "Handed to you: close to a known question", es: "Te la dejó a ti: parecida a una pregunta conocida", sw: TODO(human)}
+  stopped_unknown:    {en: "Handed to you: new question", es: "Te la dejó a ti: pregunta nueva", sw: TODO(human)}
   reasons_title:      {en: "Why date, money or safety stopped", es: "Por qué se detuvieron las de fecha, dinero o seguridad", sw: TODO(human)}
   intents_title:      {en: "Questions by topic", es: "Preguntas por tema", sw: TODO(human)}
   commit_title:       {en: "Questions you always answer yourself", es: "Preguntas que siempre respondes tú misma", sw: TODO(human)}
