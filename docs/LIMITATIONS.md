@@ -233,7 +233,8 @@ the mismatch herself.
 Our parking run, in the Swahili configuration, shows it (`results/demo_runs/parking.json`). The test audio said
 "where can I park". Whisper wrote "What can I park?". Noor heard "Ninaweza kuegesha
 nini?", a faithful translation of the wrong question. The matcher still scored the
-parking entry at 0.8684, above the 0.75 threshold, and the tool read her the correct
+parking entry at 0.8684 (measured before the batch-scaling fix below), above the 0.75
+threshold, and the tool read her the correct
 parking answer. The outcome was right. The chain that is meant to verify it was
 broken, and only the matcher's tolerance for wording made up for it.
 
@@ -249,6 +250,26 @@ stopped. It refused rather than guessed.
 
 Both runs used synthetic speech from the macOS `say` command, not a person. How often
 this happens with real guests in a field is unmeasured. TODO(measure).
+
+## Match scores used to move whenever the bank changed (fixed)
+
+The matcher's 8-bit embedding model scales its numbers across whatever batch of
+sentences it is given. We embedded the whole bank as one batch and each guest question
+on its own, so a paraphrase's vector depended on which other paraphrases were in the
+bank, and every score moved by about 0.01 whenever the bank changed. The same sentence
+matched itself at 0.9905 instead of 1.0.
+
+We found it while adding paraphrases on 3 October: "can I buy some beans to take home"
+crossed the threshold as a result, without any change to the entry it matched. It still
+stopped, but with the wrong stated reason. Fixed by embedding each paraphrase
+individually, exactly as guest questions are: a paraphrase's vector is now identical
+whatever else the bank holds, and a question identical to a paraphrase scores 1.0.
+Across our three test questions and 47 questions that must stop, the fix changed no
+route.
+
+**The match scores recorded in `results/demo_runs/`, and the ones quoted from them in
+this document and the README, predate the fix.** Re-running them today gives slightly
+different numbers.
 
 ## The phone is assumed to be at the farm
 

@@ -49,19 +49,29 @@ class Embedder:
         self.session = ort.InferenceSession(str(onnx_path), providers=["CPUExecutionProvider"])
         self.inputs = {i.name for i in self.session.get_inputs()}
         self.tokenizer = Tokenizer.from_file(str(model_dir / "tokenizer.json"))
-        self.tokenizer.enable_padding()  # pad to the longest in the batch, not to 128
+        self.tokenizer.no_padding()  # the file pads to 128; one sentence needs none
 
     def embed(self, texts) -> np.ndarray:
-        encodings = self.tokenizer.encode_batch(list(texts))
-        ids = np.array([e.ids for e in encodings], dtype=np.int64)
-        mask = np.array([e.attention_mask for e in encodings], dtype=np.int64)
+        """One sentence at a time, never batched. The 8-bit model scales its activations
+        across whatever batch it is given, so a batched sentence's vector depended on its
+        neighbours and its padding: every score moved when the bank changed. Embedded
+        alone, a paraphrase gets exactly the vector a guest's identical question gets."""
+        texts = list(texts)
+        if not texts:
+            return np.zeros((0, 384), dtype=np.float32)
+        return np.vstack([self._embed_one(t) for t in texts])
+
+    def _embed_one(self, text: str) -> np.ndarray:
+        e = self.tokenizer.encode(text)
+        ids = np.array([e.ids], dtype=np.int64)
+        mask = np.array([e.attention_mask], dtype=np.int64)
         feeds = {"input_ids": ids, "attention_mask": mask}
         if "token_type_ids" in self.inputs:
-            feeds["token_type_ids"] = np.array([e.type_ids for e in encodings], dtype=np.int64)
+            feeds["token_type_ids"] = np.array([e.type_ids], dtype=np.int64)
         hidden = self.session.run(None, feeds)[0]
         weights = mask[..., None].astype(np.float32)
         pooled = (hidden * weights).sum(axis=1) / np.clip(weights.sum(axis=1), 1e-9, None)
-        return pooled / np.linalg.norm(pooled, axis=1, keepdims=True)
+        return (pooled / np.linalg.norm(pooled, axis=1, keepdims=True))[0]
 
 
 class Voice:

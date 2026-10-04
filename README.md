@@ -99,8 +99,9 @@ own rule that audio is never sent anywhere.
 ## Demo questions
 
 Recorded runs, Swahili configuration, synthetic `say` voice. They were recorded before
-we corrected the Swahili's status; reproducing them now needs `--allow-unverified
---language sw`. The Spanish versions need the Spanish answers first.
+we corrected the Swahili's status, and their match scores predate a fix to how the
+matcher embeds the bank (see `docs/LIMITATIONS.md`); reproducing them now needs
+`--allow-unverified --language sw` and gives slightly different scores.
 
 | Ask | Should do | What our recorded run did |
 |---|---|---|
